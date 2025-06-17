@@ -1,0 +1,1991 @@
+{
+	"info": {
+		"_postman_id": "cdd7cad0-5941-42b5-997d-1a19bf53f2bf",
+		"name": "Inventory API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20779498"
+	},
+	"item": [
+		{
+			"name": "customer",
+			"item": [
+				{
+					"name": "customer/add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Banana",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "banana@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "092772441",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Phnom Penhadaadad",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Phnom Penhadadada",
+									"type": "text"
+								},
+								{
+									"key": "shop_name",
+									"value": "adadadax",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "toBXwmcd7/interest-rate.png"
+								},
+								{
+									"key": "bank_name",
+									"value": "adadaasd",
+									"type": "text"
+								},
+								{
+									"key": "bank_number",
+									"value": "000 000 000adadwd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/customer/add",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer/update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Banana",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "banana@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "092772441",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Phnom Penhadaadad",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Phnom Penhadadada",
+									"type": "text"
+								},
+								{
+									"key": "shop_name",
+									"value": "adadadax",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "toBXwmcd7/interest-rate.png"
+								},
+								{
+									"key": "bank_name",
+									"value": "adadaasd",
+									"type": "text"
+								},
+								{
+									"key": "bank_number",
+									"value": "000 000 000adadwd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/customer/update/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customers/get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/customers",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"customers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer/view/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/customer/view/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"view",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer/delete",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/customer/delete/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"delete",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/customer/Banana",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"Banana"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "customer/search/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/customer/search/b",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"search",
+								"b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "supplier",
+			"item": [
+				{
+					"name": "supplier/add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "banana",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "coca@yahoo.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "0920000001",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Phnom Penh",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Phnom Penh",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "Drinks",
+									"type": "text"
+								},
+								{
+									"key": "shop_name",
+									"value": "Phnom Penh Store",
+									"type": "text"
+								},
+								{
+									"key": "bank_name",
+									"value": "Phnom Penh Bank",
+									"type": "text"
+								},
+								{
+									"key": "bank_number",
+									"value": "123 456 789",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "mHEV2PMts/kbach khmer heart.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/supplier/add",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"supplier",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier/update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "coca",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "coca@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "092000000",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "Phnom Penh",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Phnom Penh",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "Drinks",
+									"type": "text"
+								},
+								{
+									"key": "shop_name",
+									"value": "Phnom Penh Store",
+									"type": "text"
+								},
+								{
+									"key": "bank_name",
+									"value": "Phnom Penh Bank",
+									"type": "text"
+								},
+								{
+									"key": "bank_number",
+									"value": "123 456 789",
+									"type": "text"
+								},
+								{
+									"key": "photo",
+									"type": "file",
+									"src": "pEUfq9YWj/FlasxLogo.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/supplier/update/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"supplier",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "suppliers/get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/suppliers",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"suppliers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier/view/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/supplier/view/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"supplier",
+								"view",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier/delete/{id}",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/supplier/delete/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"supplier",
+								"delete",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/supplier/coca",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"supplier",
+								"coca"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "supplier/search/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/supplier/search/co",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"supplier",
+								"search",
+								"co"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "category/add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "car",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/category/add",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "category/update/{id}",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "lambo",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/category/update/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "categories/get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/categories",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "category/view/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/category/view/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"view",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "category/delete/{id}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server}}/api/category/delete/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"delete",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "category/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/category/lambo",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"lambo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "category/search/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/category/search/l",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"category",
+								"search",
+								"l"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "brand",
+			"item": [
+				{
+					"name": "brand/add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Motorola",
+									"type": "text"
+								},
+								{
+									"key": "cat_id",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sup_id",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/brand/add",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "brand/update",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "audia",
+									"type": "text"
+								},
+								{
+									"key": "cat_id",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "sup_id",
+									"value": "2",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/brand/update/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "brands/get",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/brands",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"brands"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "brand/delete/{id}",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{server}}/api/brand/delete/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								"delete",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "brand/view/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/brand/view/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								"view",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "brand/name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/brand/audia",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								"audia"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "brand/search/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/brand/search/a",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"brand",
+								"search",
+								"a"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "GET",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "cat_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "sup_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "brand_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "product_name",
+									"value": "car",
+									"type": "text"
+								},
+								{
+									"key": "product_code",
+									"value": "car1",
+									"type": "text"
+								},
+								{
+									"key": "product_garage",
+									"value": "car",
+									"type": "text"
+								},
+								{
+									"key": "product_route",
+									"value": "car",
+									"type": "text"
+								},
+								{
+									"key": "product_image",
+									"value": "car.jpg",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "buy_date",
+									"value": "09/06/2023",
+									"type": "text"
+								},
+								{
+									"key": "expire_date",
+									"value": "09/06/2024",
+									"type": "text"
+								},
+								{
+									"key": "buying_price",
+									"value": "1500",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "2000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/products",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CREATE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "supplier_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "brand_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "product_name",
+									"value": "banana",
+									"type": "text"
+								},
+								{
+									"key": "product_code",
+									"value": "madalin",
+									"type": "text"
+								},
+								{
+									"key": "product_garage",
+									"value": "mango",
+									"type": "text"
+								},
+								{
+									"key": "product_route",
+									"value": "mango",
+									"type": "text"
+								},
+								{
+									"key": "product_image",
+									"type": "file",
+									"src": "lWYn5KTUB/knoy.png"
+								},
+								{
+									"key": "expire_date",
+									"value": "09/06/2024",
+									"type": "text"
+								},
+								{
+									"key": "import_price",
+									"value": "1500",
+									"type": "text"
+								},
+								{
+									"key": "export_price",
+									"value": "2000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/product/add",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "supplier_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "brand_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "product_name",
+									"value": "banana",
+									"type": "text"
+								},
+								{
+									"key": "product_code",
+									"value": "mango",
+									"type": "text"
+								},
+								{
+									"key": "product_garage",
+									"value": "mango",
+									"type": "text"
+								},
+								{
+									"key": "product_route",
+									"value": "mango",
+									"type": "text"
+								},
+								{
+									"key": "product_image",
+									"type": "file",
+									"src": "4XC2YFIZm/axcxvsdfdvd.png"
+								},
+								{
+									"key": "expire_date",
+									"value": "09/06/2024",
+									"type": "text"
+								},
+								{
+									"key": "import_price",
+									"value": "1000",
+									"type": "text"
+								},
+								{
+									"key": "export_price",
+									"value": "2000",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/product/update/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product/view/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/product/view/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"view",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product/name/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/product/name/banana",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"name",
+								"banana"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product/delete/{id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/product/delete/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"delete",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "product/search/{name}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/product/search/b",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"product",
+								"search",
+								"b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"sokheng1@gmail.com\",\n    \"password\": \"123123123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}/api/login",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "apple/Desktop/full_stack_web.jpg",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "sokheng1@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "name",
+									"value": "sokheng1",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123123123",
+									"type": "text"
+								},
+								{
+									"key": "password_confirmation",
+									"value": "123123123",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/register",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMTQ1YjFjMGNjNDYwNjIxOGFhYTY5MjM2NGE0ZTcyMTkxMDhhYmI1YjhiY2M3NDdjMjZjMTA3OGQzNDdmOTdkZjdhY2MzOTBlMWI4Y2Y5MDQiLCJpYXQiOjE2Nzk3MjY0MDMuMzgyODc2LCJuYmYiOjE2Nzk3MjY0MDMuMzgyODc4LCJleHAiOjE3MTEzNDg4MDMuMzc3MTYyLCJzdWIiOiIyIiwic2NvcGVzIjpbXX0.oN58G6xiV7rYPfnOa3-EWOD1DwE_e8qaHurYLtJgLFhrFS5yU25b3IEjMmHl4JNMWBxKAmukyzwqLFZ0_I3FUJvamvJp_p7Lt5oV7SESJD222swZNhcd3nSOYZJH6jMUHwO9A_xqN7dUjeTChjlNXWRUX9G4QP1XfPDbAjnIoFs3NZcMHxVNJATBBNUjZ9_aQNqTKsP7oAqKqrdWZ-2VN2tgrxlcDfa-Qu60Cxbvrktj1hLsG6VGPK9XuUm8zHZmG2WO_zdULJUVLZe2TcgLTorzHU1UYEY9MDrq3okNh4LNI7JizZD5bYkMTv_uuftJ4DPROXg7_3ggkKEwSHFQyv4ECN_noFEWkYNLwM84ZJ97HOqb7iKsFC0Z899xajM9UHOP1kWIZHSJtpYrXyyqJch4E9fkxd6nmYvus1nViXeCvIMwiCRTGOz8IDa0cs2AwIgIAAV-_pO4rtboTFbVPkvBKunGrDmuVBwQxwHkGYxxwZoGsmS53lFPM2nco9KI8-3rLeMf5BJOXzR7olNfJYQ0Hzt7P2Gjml0cTa1hG0slIamLxfiGc3bLUoC31pLANZkwfCPWMACvuWa0PHcHaTEQ3QrVietT6VKIN5710aVfdyYfqZhWYEcPHDN3tsYPHA6feRW_RqfQhKkcIGZQ0_N_fYmwusD8NzrBnGjPoDA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "apple/Documents/DSC04295.jpg",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "sokheng@gmail.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "jonh",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123123123",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password_confirmation",
+									"value": "123123123",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/user/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiNzliMTdjOWUxZjBiOGIzNTNkYjVhNjUxMDM0Y2JjNzA3MmQwNWI1NDI3MWYxM2E1NDcyZWZlZGE4ZmYyOWNmNjE5ZDRkOGI2NTQ5ZGJmMjkiLCJpYXQiOjE2ODM4ODA2NDMuODk3MzcxLCJuYmYiOjE2ODM4ODA2NDMuODk3Mzc0LCJleHAiOjE3MTU1MDMwNDMuODY0Njc3LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.ZTBN3x5iJWSBXzIkWzjyyt3wjx9sEYvaE5jJ2OYQkMezrSJ7SpEQXBRBYWucHaPLP6WWB4ALekTXHp_lOy4ESX6cjfEDyHilkGsOr_qITDvhyJfbpjf11rSX2K4AGb2sACcOaaLmUSrxOGFNFFyUXclr4FBq7nLi85qHsmTo3-q2g_PGLiwPFD4OQkf2unOh3sfv4eJ1GPucdQr5nAGq6txXBl9GvJKGyAlfR0qhUI71TCkD24cLCaiqaU4f0M2-lUgegUPzhxydrwq5DVk5Ni_77OU52dsOc_yFgXJnsGjcu8CD2trHjTBFPAIVj9NV21KO7cTuTe6ubca940_p4ZRwsDW3NPqmUw8L0EUfvUtn7m0JH5H8YiviQ_W2e-trFe8QaA6uVysLqZQeyGlaHvzc_oyVIOCntTrugBN9EQyHrRoCIXK2yXwbwPZM3ZBaMewihFv8izoKbEBv386KrpHmwTwJME5mB7rJ69luK3wd9TEsFaKjbZouj6TUmFrSvI2ecbDd1oOjf5NZQUjKw0GC-ip24Dub8Vz0Rcsier3KCI5P_HQLSCh29am_RyKKnVh5Q9NhRLd03aO600FVlJKj6TOyHfhWW7jSZGgN7vMrZY5Tk0_eXkHxlHkdur-m1XoAwLxublrD7gQqr2yRo-3kqGHScSF_rsYG1acmdAs",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"warning": "This is a duplicate header and will be overridden by the Content-Type header generated by Postman.",
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": [],
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "sokheng@gmail.com",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "jonh",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "123123123",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "password_confirmation",
+									"value": "123123123",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/user",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "adjustment",
+			"item": [
+				{
+					"name": "products/category/{cat_id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/products/category/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"category",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "products/category/brand/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/products/category/brand/1/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"category",
+								"brand",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "products/category/supplier/",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/products/category/supplier/1/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"category",
+								"supplier",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "income",
+			"item": [
+				{
+					"name": "incomes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/incomes",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"incomes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "income/edit/{id}",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/income/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"income",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "incomes/{formDate}/{toDate}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/incomes/01-06-2023/30-06-2023",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"incomes",
+								"01-06-2023",
+								"30-06-2023"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "income/today",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/income/today",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"income",
+								"today"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "income/month",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/income/month",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"income",
+								"month"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "income/year",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/income/year",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"income",
+								"year"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "expense",
+			"item": [
+				{
+					"name": "getExpenses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/expense",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"expense"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "expense/view/expense/view/{id_product}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/expense/view/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"expense",
+								"view",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "expense/{formDate}/{toDate}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/expense/2023-06-1/2023-06-30",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"expense",
+								"2023-06-1",
+								"2023-06-30"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "expense/today",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/expense/today",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"expense",
+								"today"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "expense/month",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/expense/month",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"expense",
+								"month"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "expense/year",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/expense/year",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"expense",
+								"year"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "import",
+			"item": [
+				{
+					"name": "imports",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/imports",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"imports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "import/add/{product_id}",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product_quantity",
+									"value": "10",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/import/add/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"import",
+								"add",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "import/{product_id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/import/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"import",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "export",
+			"item": [
+				{
+					"name": "exports",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/exports",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"exports"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "export/add/{product_id}",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "product_quantity",
+									"value": "5",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{server}}/api/export/add/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"export",
+								"add",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "export/{product_id}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/export/1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"export",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "revenue",
+			"item": [
+				{
+					"name": "revenues",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/revenues",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"revenues"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revenues/today",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/revenues/today",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"revenues",
+								"today"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revenues/month",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/revenues/month",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"revenues",
+								"month"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revenues/year",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/revenues/year",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"revenues",
+								"year"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "revenues/{formDate}/{toDate}",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}/api/revenues/2023-6-1/2023-6-30",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"revenues",
+								"2023-6-1",
+								"2023-6-30"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
