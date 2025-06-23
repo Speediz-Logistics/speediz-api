@@ -84,7 +84,7 @@ class PackageController extends Controller
         //validate request
         $request->validate([
             'key' => 'required|string|max:255',
-            'value' => 'required|string|max:255',
+            'value' => 'required',
         ]);
 
         $key = $request->input('key');
@@ -161,7 +161,7 @@ class PackageController extends Controller
     public function searchBranch(Request $request)
     {
         // Get branch by name
-        $branch = Branch::where('phone', $request->input('value'))->first();
+        $branch = Branch::where('id', $request->input('value'))->first();
 
         if (!$branch) {
             return null;

@@ -4,6 +4,7 @@ use App\Http\Controllers\Employee\DashboardController;
 use App\Http\Controllers\Employee\AuthController;
 use App\Http\Controllers\Employee\DriverManagementController;
 use App\Http\Controllers\Employee\PackageController;
+use App\Http\Controllers\Employee\PackageOptionController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('employee')->group(function () {
@@ -29,7 +30,7 @@ Route::prefix('employee')->group(function () {
             Route::get('/{id}', [PackageController::class, 'show'])->name('employee.package.show');
             Route::post('/{id}', [PackageController::class, 'update'])->name('employee.package.update');
         });
-
+        Route::post('/package-options', [PackageOptionController::class, 'index'])->name('employee.package.options');
         Route::post('/package-search', [PackageController::class, 'search'])->name('employee.package.search');
     });
 
