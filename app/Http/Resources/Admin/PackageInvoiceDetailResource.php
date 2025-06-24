@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Admin;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,6 +17,13 @@ class PackageInvoiceDetailResource extends JsonResource
     {
         return [
             'id' => $this->id ?? null,
+            'package_number' => $this->number,
+            'customer_phone' => $this->customer?->phone,
+            'location' => $this->location?->location,
+            'package_date' => Carbon::parse($this->created_at)->format('Y-m-d'),
+            'package_price' => $this->price,
+            'package_status' => $this->status,
+
             'personal' => [
                 'sender_name' => ($this->vendor?->first_name ?? '') . ' ' . ($this->vendor?->last_name ?? ''),
                 'sender_phone_number' => $this->vendor?->contact_number ?? null,

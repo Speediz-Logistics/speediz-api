@@ -11,6 +11,7 @@ use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\DeliveryFee;
 use App\Models\Driver;
+use App\Models\Invoice;
 use App\Models\Package;
 use App\Models\PackageType;
 use App\Models\Shipment;
@@ -276,6 +277,20 @@ class PackageController extends Controller
             'package_type_id' => $package_type->id,
             'note' => $request->input('note'),
             'zone' => 'A'
+        ]);
+
+        Invoice::query()->create([
+            'vendor_invoice_id' => $package->id,
+            'customer_id' => $customer->id,
+            'vendor_id' => $vendor->id,
+            'employee_id' => auth()->user()->id,
+            'driver_id' => $driver->id,
+            'package_id' => $package->id,
+            'number' => 'INV-' . time() . '-' . $package->id,
+            'date' => now(),
+            'total' => $request->input('package_price'),
+            'status' => 'pending',
+            'note' => $request->input('note'),
         ]);
 
         return $this->success($package, 'Package created successfully');

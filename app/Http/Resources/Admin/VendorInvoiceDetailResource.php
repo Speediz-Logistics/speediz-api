@@ -19,10 +19,17 @@ class VendorInvoiceDetailResource extends JsonResource
         $packages = $this->invoices->pluck('package')->filter();
 
         return [
-            'invoice_number' => $this->invoice_number,
+            'id' => $this->id ?? null,
+            'invoice_number' => $this->invoice_number ?? null,
+            'date' => $this->created_at->format('Y-m-d') ?? null,
+            'vendor_name' => $this->vendor?->first_name . ' ' . $this->vendor?->last_name ?? null,
+            'description' => $this->description ?? null,
+            'amount' => count($this->invoices) ?? 0,
+            'total_invoice' => $this->total ?? 0,
+            'payment_status' => $this->status ?? null,
+
             'to'             => optional($this->vendor)->first_name . ' ' . optional($this->vendor)->last_name,
             'phone'          => optional($this->vendor)->contact_number,
-            'date'           => $this->created_at->format('Y-m-d'),
             'invoice_status' => $this->status,
             'package_status' => [
                 'cancelled' => $packages->where('status', 'cancelled')->count(),

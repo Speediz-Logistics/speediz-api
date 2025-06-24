@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Employee\InvoiceController;
 use App\Http\Controllers\Employee\SettingController;
 use App\Http\Controllers\Employee\DashboardController;
 use App\Http\Controllers\Employee\AuthController;
@@ -38,8 +39,19 @@ Route::prefix('employee')->group(function () {
             Route::get('/', [SettingController::class, 'index'])->name('employee.setting');
             Route::post('/', [SettingController::class, 'update'])->name('employee.setting.update');
         });
+
+        //vendor invoice
+        Route::prefix('/package-invoice')->group(function () {
+            Route::get('/', [InvoiceController::class, 'packagesInvoice'])->name('employee.package.invoice');
+            //updatePackageInvoice
+            Route::post('/{id}', [InvoiceController::class, 'updatePackageInvoice'])->name('employee.package.invoice.update');
+        });
+
+        Route::prefix('/vendor-invoice')->group(function () {
+            Route::get('/', [InvoiceController::class, 'vendorInvoice'])->name('employee.vendor.invoice');
+            //add create
+        });
     });
 
-    //create vendor invoice
 
 });

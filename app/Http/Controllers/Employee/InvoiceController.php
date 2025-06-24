@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Employee;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdatePackageInvoiceRequest;
@@ -8,11 +8,9 @@ use App\Http\Resources\Admin\PackageInvoiceDetailResource;
 use App\Http\Resources\Admin\PackageInvoiceResource;
 use App\Http\Resources\Admin\VendorInvoiceDetailResource;
 use App\Http\Resources\Admin\VendorInvoiceResource;
-use App\Models\Invoice;
 use App\Models\Package;
 use App\Models\VendorInvoice;
 use App\Traits\BaseApiResponse;
-use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
@@ -38,7 +36,7 @@ class InvoiceController extends Controller
         $search = request()->query('search'); // Search by customer phone
         $date = request()->query('date');
 
-        $invoiceQuery = Package::with(['invoice', 'customer', 'location']);
+        $invoiceQuery = Package::with(['invoice', 'customer', 'location','shipment', 'vendor', 'driver', 'branch', 'package_type']);
 
         if ($date) {
             $invoiceQuery->whereHas('invoice', function ($query) use ($date) {
@@ -55,7 +53,7 @@ class InvoiceController extends Controller
         $paginate = $invoiceQuery->paginate($perPage);
 
         $invoices = [
-            'data' => PackageInvoiceResource::collection($paginate), // Use the stored paginated result
+            'data' => PackageInvoiceDetailResource::collection($paginate), // Use the stored paginated result
             'pagination' => [
                 'total' => $paginate->total(),
                 'per_page' => $paginate->perPage(),
@@ -135,7 +133,11 @@ class InvoiceController extends Controller
         $date = request()->query('date');
 
         // Query vendor invoices and include related invoices and vendor data
-        $invoiceQuery = VendorInvoice::with(['vendor', 'invoices']);
+        $invoiceQuery = VendorInvoice::with(['vendor', 'invoices' => function($query) {
+            $query->with(['package' => function($query) {
+                $query->with(['customer', 'location', 'shipment', 'vendor', 'driver', 'branch', 'package_type']);
+            }]);
+        }]);
 
         if ($date) {
             $invoiceQuery->whereDate('created_at', $date);
@@ -151,7 +153,7 @@ class InvoiceController extends Controller
         $paginate = $invoiceQuery->paginate($perPage);
 
         $invoices = [
-            'data' => VendorInvoiceResource::collection($paginate), // Use the stored paginated result
+            'data' => VendorInvoiceDetailResource::collection($paginate),
             'pagination' => [
                 'total' => $paginate->total(),
                 'per_page' => $paginate->perPage(),
