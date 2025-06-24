@@ -60,7 +60,7 @@ class AuthController extends Controller
             // Validate the request data
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8|confirmed',
+                'password' => 'required|string|min:8',
                 'account_status' => 'sometimes|string',
                 // Vendor-specific fields
                 'first_name' => 'required_if:role,vendor|string|max:255',
