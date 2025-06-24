@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Traits\BaseApiResponse;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -115,7 +116,7 @@ class AuthController extends Controller
                     'business_name' => $data['business_name'],
                     'business_type' => $data['business_type'] ?? null,
                     'business_description' => $data['business_description'] ?? null,
-                    'dob' => $data['dob'] ?? null,
+                    'dob' => $data['dob'] ? Carbon::parse($data['dob']) : null,
                     'gender' => $data['gender'] ?? null,
                     'address' => $data['address'] ?? null,
                     'lat' => $data['lat'] ?? null,
