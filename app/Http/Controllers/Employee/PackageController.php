@@ -211,7 +211,7 @@ class PackageController extends Controller
             return $this->failed(null, 'Package not found', 'Package not found', 404);
         }
 
-        $vendor = Vendor::where('contact_number', $request->input('sender_phone'))->first();
+        $vendor = Vendor::where('id', $request->input('sender_id'))->first();
         $customer = Customer::where('phone', $request->input('receiver_phone'))->first();
         $branch = Branch::where('phone', $request->input('branch_phone'))->first();
         $driver = Driver::where('contact_number', $request->input('driver_phone'))->first();
@@ -240,7 +240,7 @@ class PackageController extends Controller
     //store
     public function store(PackageStoreRequest $request)
     {
-        $vendor = Vendor::where('contact_number', $request->input('sender_phone'))->first();
+        $vendor = Vendor::where('id', $request->input('sender_id'))->first();
         $customer = Customer::where('phone', $request->input('receiver_phone'))->first();
         $branch = Branch::where('phone', $request->input('branch_phone'))->first();
         $driver = Driver::where('contact_number', $request->input('driver_phone'))->first();

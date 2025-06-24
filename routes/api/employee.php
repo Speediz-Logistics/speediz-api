@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Employee\SettingController;
 use App\Http\Controllers\Employee\DashboardController;
 use App\Http\Controllers\Employee\AuthController;
 use App\Http\Controllers\Employee\DriverManagementController;
@@ -32,6 +33,11 @@ Route::prefix('employee')->group(function () {
         });
         Route::post('/package-options', [PackageOptionController::class, 'index'])->name('employee.package.options');
         Route::post('/package-search', [PackageController::class, 'search'])->name('employee.package.search');
+
+        Route::prefix('setting')->group(function () {
+            Route::get('/', [SettingController::class, 'index'])->name('employee.setting');
+            Route::post('/', [SettingController::class, 'update'])->name('employee.setting.update');
+        });
     });
 
     //create vendor invoice

@@ -16,7 +16,7 @@ class EmployeeAccessMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->user()->role !== config('settings.roles.employee')) {
-            return response()->json(["message" => "Sorry! Only Admin can access."], 400);
+            return response()->json(["message" => "Sorry! Only Employee can access."], 400);
         }
         return $next($request);
     }

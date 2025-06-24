@@ -15,8 +15,8 @@ class PackageStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'sender_id' => 'required',
             'sender_name' => 'required|string|max:255',
-            'sender_phone' => 'required|string|max:255',
 
             'receiver_name' => 'required|string|max:255',
             'receiver_phone' => 'required|string|max:255',
