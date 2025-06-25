@@ -111,7 +111,7 @@ class DeliveryHomeController extends Controller
         $revenue = Revenue::create([
             'name' => 'Delivery Fee' . Carbon::now()->format('Y-m-d'),
             'description' => $driver->name . 'Delivery Fee' . Carbon::now()->format('Y-m-d') . 'Package ID' . $package_id,
-            'amount' => $delivery_fee,
+            'amount' => $delivery_fee ?? 1.5,
         ]);
 
         return $this->success([
