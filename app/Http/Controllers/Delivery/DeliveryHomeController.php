@@ -106,12 +106,12 @@ class DeliveryHomeController extends Controller
         //update delivery tracking status to delivered
         DeliveryTracking::query()->where('package_id', $package_id)->update(['status' => ConstPackageStatus::COMPLETED]);
         //query delivery_fee from shipment by package_id
-        $delivery_fee = Shipment::query()->where('package_id', $package_id)->first()->delivery_fee;
+        $delivery_fee = Shipment::query()->where('package_id', $package_id)->first();
         //add delivery_fee to revenue
         $revenue = Revenue::create([
             'name' => 'Delivery Fee' . Carbon::now()->format('Y-m-d'),
             'description' => $driver->name . 'Delivery Fee' . Carbon::now()->format('Y-m-d') . 'Package ID' . $package_id,
-            'amount' => $delivery_fee ?? 1.5,
+            'amount' => $delivery_fee->delivery_fee ?? 1.5,
         ]);
 
         return $this->success([
