@@ -64,28 +64,49 @@ class DeliveryHomeController extends Controller
     public function pickupPackage(Request $request)
     {
         $user = auth()->user();
-        $driver = Driver::query()->where('user_id', $user->id)->first();
-        $package_id = $request->id;
+        $driver = Driver::where('user_id', $user->id)->first();
 
         if (!$driver) {
             return $this->error('Driver not found', 404);
         }
-        //update package status to picked up
-        //Assign Driver Id
-        Package::query()->where('id', $package_id)->update(['status' => ConstPackageStatus::IN_TRANSIT]);
-        //picked_up_at
-        Package::query()->where('id', $package_id)->update(['picked_up_at' => now()]);
-        //update shipment status to in transit
-        Shipment::query()->where('package_id', $package_id)->update(['status' => ConstShipmentStatus::IN_TRANSIT]);
-        //add driver id to invoice
-        Invoice::query()->where('package_id', $package_id)->update(['driver_id' => $driver->id]);
-        //create delivery tracking
-        $tracking = new DeliveryTracking();
-        $tracking->package_id = $package_id;
-        $tracking->status = ConstPackageStatus::IN_TRANSIT;
-        $tracking->save();
 
-        return $this->success(null,'Package picked up successfully');
+        $package_id = $request->id;
+        $package = Package::find($package_id);
+
+        if (!$package) {
+            return $this->error('Package not found', 404);
+        }
+
+        DB::beginTransaction();
+        try {
+            // Update Package
+            $package->update([
+                'status' => ConstPackageStatus::IN_TRANSIT,
+                'picked_up_at' => now()
+            ]);
+
+            // Update Shipment
+            Shipment::where('package_id', $package_id)
+                ->update(['status' => ConstShipmentStatus::IN_TRANSIT]);
+
+            // Update Invoice (assign driver)
+            Invoice::where('package_id', $package_id)
+                ->update(['driver_id' => $driver->id]);
+
+            // Create Delivery Tracking
+            DeliveryTracking::create([
+                'package_id' => $package_id,
+                'status' => ConstPackageStatus::IN_TRANSIT,
+            ]);
+
+            DB::commit();
+
+            return $this->success(null, 'Package picked up successfully');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error('Failed to update: ' . $e->getMessage(), 500);
+        }
     }
 
     //deliveredPackage
