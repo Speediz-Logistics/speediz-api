@@ -279,7 +279,7 @@ class PackageController extends Controller
             'zone' => 'A'
         ]);
 
-        Invoice::query()->create([
+        $invoice = Invoice::query()->create([
             'vendor_invoice_id' => $package->id,
             'customer_id' => $customer->id,
             'vendor_id' => $vendor->id,
@@ -292,6 +292,22 @@ class PackageController extends Controller
             'status' => 'pending',
             'note' => $request->input('note'),
         ]);
+
+        $shipment = Shipment::query()->create([
+            'package_id' => $package->id,
+            'number' => 'SHIP-' . time() . '-' . $package->id,
+            'type' => 'standard',
+            'description' => $request->input('note'),
+            'date' => now(),
+            'delivery_fee' => 1.5, // Assuming delivery fee is 0 for now
+            'status' => 'pending',
+        ]);
+
+        $package->shipment()->associate($shipment);
+        $package->save();
+        // Attach the invoice to the package
+        $package->invoice()->associate($invoice);
+        $package->save();
 
         return $this->success($package, 'Package created successfully');
     }
