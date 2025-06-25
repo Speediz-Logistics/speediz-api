@@ -28,7 +28,7 @@ class DeliveryHomeController extends Controller
         $driver = Driver::query()->where('user_id', $user->id)->first();
 
         if (!$driver) {
-            return $this->error('Driver not found', 404);
+            return $this->failed(null,'Driver', 'Driver not found', 404);
         }
 
         //packages belong to driver
@@ -67,14 +67,14 @@ class DeliveryHomeController extends Controller
         $driver = Driver::where('user_id', $user->id)->first();
 
         if (!$driver) {
-            return $this->error('Driver not found', 404);
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
         }
 
         $package_id = $request->id;
         $package = Package::find($package_id);
 
         if (!$package) {
-            return $this->error('Package not found', 404);
+            return $this->failed(null, 'Package', 'Package not found', 404);
         }
 
         DB::beginTransaction();
@@ -116,7 +116,7 @@ class DeliveryHomeController extends Controller
         $driver = Driver::where('user_id', $user->id)->first();
 
         if (!$driver) {
-            return $this->error('Driver not found', 404);
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
         }
 
         $package_id = $request->id;
