@@ -126,7 +126,7 @@ class DeliveryHomeController extends Controller
             DB::beginTransaction();
 
             // Verify package exists
-            $package = Package::find($package_id);
+            $package = Package::query()->where('number', $package_id)->first();
             if (!$package) {
                 return $this->failed(null,'Package not found', 'Package not found', 404);
             }
