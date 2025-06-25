@@ -71,7 +71,8 @@ class DeliveryHomeController extends Controller
         }
 
         $package_id = $request->id;
-        $package = Package::find($package_id);
+        $package = Package::query()->where('number', $package_id)
+            ->first();
 
         if (!$package) {
             return $this->failed(null, 'Package', 'Package not found', 404);
