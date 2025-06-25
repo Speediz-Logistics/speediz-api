@@ -15,6 +15,7 @@ use App\Models\Shipment;
 use App\Traits\BaseApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DeliveryHomeController extends Controller
 {
@@ -91,34 +92,60 @@ class DeliveryHomeController extends Controller
     public function deliveredPackage(Request $request)
     {
         $user = auth()->user();
-        $driver = Driver::query()->where('user_id', $user->id)->first();
-        $package_id = $request->id;
+        $driver = Driver::where('user_id', $user->id)->first();
 
         if (!$driver) {
             return $this->error('Driver not found', 404);
         }
-        //update package status to delivered
-        Package::query()->where('id', $package_id)->update(['status' => ConstPackageStatus::COMPLETED]);
-        //delivered_at
-        Package::query()->where('id', $package_id)->update(['delivered_at' => now()]);
-        //update shipment status to delivered
-        Shipment::query()->where('package_id', $package_id)->update(['status' => ConstShipmentStatus::COMPLETED]);
-        //update delivery tracking status to delivered
-        DeliveryTracking::query()->where('package_id', $package_id)->update(['status' => ConstPackageStatus::COMPLETED]);
-        //query delivery_fee from shipment by package_id
-        $delivery_fee = Shipment::query()->where('package_id', $package_id)->first();
-        //add delivery_fee to revenue
-        $revenue = Revenue::create([
-            'name' => 'Delivery Fee' . Carbon::now()->format('Y-m-d'),
-            'description' => $driver->name . 'Delivery Fee' . Carbon::now()->format('Y-m-d') . 'Package ID' . $package_id,
-            'amount' => $delivery_fee->delivery_fee ?? 1.5,
-        ]);
 
-        return $this->success([
-            'revenue' => $revenue,
-            'driver' => $driver,
-            'package_id' => $package_id,
-        ],'Package delivered successfully');
+        $package_id = $request->id;
+
+        try {
+            DB::beginTransaction();
+
+            // Verify package exists
+            $package = Package::find($package_id);
+            if (!$package) {
+                return $this->error('Package not found', 404);
+            }
+
+            // Update package
+            $package->update([
+                'status' => ConstPackageStatus::COMPLETED,
+                'delivered_at' => now()
+            ]);
+
+            // Update shipment
+            Shipment::where('package_id', $package_id)
+                ->update(['status' => ConstShipmentStatus::COMPLETED]);
+
+            // Update delivery tracking
+            DeliveryTracking::where('package_id', $package_id)
+                ->update(['status' => ConstPackageStatus::COMPLETED]);
+
+            // Get delivery fee
+            $shipment = Shipment::where('package_id', $package_id)->first();
+            $delivery_fee = $shipment->delivery_fee ?? 1.5;
+
+            // Create revenue
+            $revenue = Revenue::create([
+                'name' => 'Delivery Fee ' . now()->format('Y-m-d'),
+                'description' => "{$driver->name} Delivery Fee for Package ID {$package_id}",
+                'amount' => $delivery_fee,
+            ]);
+
+            DB::commit();
+
+            return $this->success([
+                'revenue' => $revenue,
+                'driver' => $driver,
+                'package' => $package,
+            ], 'Package delivered successfully');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->error('Failed to update package: ' . $e->getMessage(), 500);
+        }
     }
 
     //realtimeTracking
