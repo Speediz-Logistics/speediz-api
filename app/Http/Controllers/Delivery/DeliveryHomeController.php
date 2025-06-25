@@ -101,11 +101,11 @@ class DeliveryHomeController extends Controller
 
             DB::commit();
 
-            return $this->success(null, 'Package picked up successfully');
+            return $this->success($package, 'Package picked up successfully');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->error('Failed to update: ' . $e->getMessage(), 500);
+            return $this->failed(null,'Failed to update: ' . $e->getMessage(), 500);
         }
     }
 
@@ -127,7 +127,7 @@ class DeliveryHomeController extends Controller
             // Verify package exists
             $package = Package::find($package_id);
             if (!$package) {
-                return $this->error('Package not found', 404);
+                return $this->failed(null,'Package not found', 'Package not found', 404);
             }
 
             // Update package
@@ -165,7 +165,7 @@ class DeliveryHomeController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->error('Failed to update package: ' . $e->getMessage(), 500);
+            return $this->failed(null,'Failed to update package: ' . $e->getMessage(), 500);
         }
     }
 
