@@ -19,7 +19,10 @@ class PackageStoreRequest extends FormRequest
             'sender_name' => 'required|string|max:255',
 
             'receiver_name' => 'required|string|max:255',
+            'receiver_address' => 'required|string|max:255',
             'receiver_phone' => 'required|string|max:255',
+            'receiver_lat' => 'required|string|max:255',
+            'receiver_lng' => 'required|string|max:255',
 
             'branch_name' => 'required|string|max:255',
             'branch_phone' => 'required|string|max:255',

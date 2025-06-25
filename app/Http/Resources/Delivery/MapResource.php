@@ -32,6 +32,7 @@ class MapResource extends JsonResource
                 'lng' => $this->location?->lng,
             ],
             'package' => [
+                'price' => $this->price,
                 'delivery_fee' => $this->shipment?->delivery_fee,
                 'status' => $this->shipment?->status,
             ]

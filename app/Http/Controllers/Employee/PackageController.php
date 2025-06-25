@@ -12,6 +12,7 @@ use App\Models\Customer;
 use App\Models\DeliveryFee;
 use App\Models\Driver;
 use App\Models\Invoice;
+use App\Models\Location;
 use App\Models\Package;
 use App\Models\PackageType;
 use App\Models\Shipment;
@@ -302,6 +303,17 @@ class PackageController extends Controller
             'delivery_fee' => 1.5, // Assuming delivery fee is 0 for now
             'status' => 'pending',
         ]);
+
+        //locations
+        $location = Location::query()->create([
+            'location' => $request->input('receiver_address'),
+            'lat' => $request->input('receiver_lat'),
+            'lng' => $request->input('receiver_lng'),
+        ]);
+
+        // Attach the location to the package
+        $package->location()->associate($location);
+        $package->save();
 
         $package->shipment()->associate($shipment);
         $package->save();
