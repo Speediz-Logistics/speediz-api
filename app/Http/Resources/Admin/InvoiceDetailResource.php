@@ -22,9 +22,9 @@ class InvoiceDetailResource extends JsonResource
             'location'         => $this->package?->location?->location,
             'package_date'     => Carbon::parse($this->created_at)->format('Y-m-d'),
             'package_price'    => $this->total,
-            'cod'              => $this->package->invoice->status === "unpaid" ? 0 : $this->total,
+            'cod'              => $this->package?->invoice?->status === "unpaid" ? 0 : $this->total,
             'delivery_fee'     => (int) $this->package?->shipment?->delivery_fee ?? 1.5, // Casting to int
-            'package_status'   => $this->package->status,
+            'package_status'   => $this->package?->status,
         ];
     }
 }
