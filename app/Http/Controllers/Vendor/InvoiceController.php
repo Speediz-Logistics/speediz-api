@@ -117,11 +117,11 @@ class InvoiceController extends Controller
             ->where('vendor_id', $vendorId)
             ->with([
                 'vendor',
-                'invoice',
-                'invoice.customer',
-                'invoice.driver',
-                'invoice.package',
-                'invoice.vendor',
+                'invoices',
+                'invoices.customer',
+                'invoices.driver',
+                'invoices.package',
+                'invoices.vendor',
             ])
             ->when($dateFilter, fn($query, $date) => $query->whereDate('created_at', $date))
             ->paginate($perPage);
@@ -182,10 +182,10 @@ class InvoiceController extends Controller
         $vendorInvoice = VendorInvoice::where('vendor_id', $vendorId)
             ->with([
                 'vendor',
-                'invoice',
-                'invoice.customer',
-                'invoice.driver',
-                'invoice.package',
+                'invoices',
+                'invoices.customer',
+                'invoices.driver',
+                'invoices.package',
             ])
             ->when($dateFilter, function ($query, $date) {
                 return $query->whereDate('created_at', $date);
