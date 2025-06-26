@@ -40,7 +40,7 @@ class VendorInvoiceDetailResource extends JsonResource
             'invoices'    => InvoiceDetailResource::collection($this->invoices),
             'grand_total' => $this->invoices->sum(function ($invoice) {
                 // Cast the delivery_fee (from package->shipment) to integer.
-                return (int) optional($invoice->package->shipment)->delivery_fee ?? 1.5;
+                return (int) optional($invoice->package?->shipment)->delivery_fee ?? 1.5;
             }),
         ];
     }
