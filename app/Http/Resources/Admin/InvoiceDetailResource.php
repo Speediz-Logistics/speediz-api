@@ -17,13 +17,13 @@ class InvoiceDetailResource extends JsonResource
     {
         return [
             'id'               => $this->id,
-            'shipment_code'    => $this->package->shipment?->number,
-            'receiver_contact' => $this->package->customer?->phone,
-            'location'         => $this->package->location?->location,
+            'shipment_code'    => $this->package?->shipment?->number,
+            'receiver_contact' => $this->package?->customer?->phone,
+            'location'         => $this->package?->location?->location,
             'package_date'     => Carbon::parse($this->created_at)->format('Y-m-d'),
             'package_price'    => $this->total,
             'cod'              => $this->package->invoice->status === "unpaid" ? 0 : $this->total,
-            'delivery_fee'     => (int) $this->package->shipment?->delivery_fee, // Casting to int
+            'delivery_fee'     => (int) $this->package?->shipment?->delivery_fee ?? 1.5, // Casting to int
             'package_status'   => $this->package->status,
         ];
     }
