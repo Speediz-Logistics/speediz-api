@@ -103,6 +103,7 @@ class AuthController extends Controller
                 'email' => $data['email'],
                 'password' => $data['password'],
                 'account_status' => $data['account_status'],
+                'email_verified_at' => Carbon::now(),
             ]);
 
             // Generate token
