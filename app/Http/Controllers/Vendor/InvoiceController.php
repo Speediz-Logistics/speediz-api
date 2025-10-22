@@ -47,7 +47,7 @@ class InvoiceController extends Controller
             ->paginate($perPage);
 
         // Define all possible statuses
-        $allStatuses = ['completed', 'pending', 'in_transit', 'cancelled'];
+        $allStatuses = ['pending', 'in_transit'];
 
         // Convert paginator collection and modify invoices
         $invoices->getCollection()->transform(function ($invoice) use ($allStatuses, $dateFilter) {
@@ -77,6 +77,67 @@ class InvoiceController extends Controller
         return $this->success(new InvoiceCollection($invoices), 'List of vendor invoices.');
     }
 
+    //history
+    public function history(Request $request)
+    {
+        $user = auth()->user();
+        $perPage = $request->query('per_page', config('pagination.per_page', 10));
+        $dateFilter = $request->query('date');
+
+        // Reformat date to match Laravel's 'created_at' format (YYYY-MM-DD)
+        if ($dateFilter) {
+            try {
+                $dateFilter = Carbon::parse($dateFilter)->format('Y-m-d');
+            } catch (\Exception $e) {
+                return $this->failed('Invalid date format.', 422);
+            }
+        }
+
+        $invoices = $user->vendor->invoices()
+            ->with([
+                'packages.vendor',
+                'packages.customer',
+                'packages.location',
+                'packages.shipment',
+                'driver',
+                'packages',
+                'employee'
+            ])
+            ->when($request->query('search'), fn($query, $search) => $query->where('number', 'like', "%$search%"))
+            ->when($dateFilter, fn($query, $date) => $query->whereDate('created_at', $date))
+            ->paginate($perPage);
+
+        // Define all possible statuses
+        $allStatuses = ['completed', 'cancelled'];
+
+        // Convert paginator collection and modify invoices
+        $invoices->getCollection()->transform(function ($invoice) use ($allStatuses, $dateFilter) {
+            // Ensure packages is a collection
+            $packages = $invoice->packages ?? collect();
+
+            $invoice->total_package_price = $packages->sum('price');
+            $invoice->delivery_fee = $packages->sum(fn($package) => optional($package->shipment)->delivery_fee ?? 0);
+
+            // Get the package status counts
+            $statusCounts = Package::query()
+                ->selectRaw('status, count(*) as count')
+                ->where('vendor_id', $invoice->vendor->id)
+                ->when($dateFilter, fn($query, $date) => $query->whereDate('created_at', $date))
+                ->groupBy('status')
+                ->get()
+                ->pluck('count', 'status')
+                ->toArray();
+
+            // Ensure all statuses exist with default 0
+            $invoice->package_status_counts = collect($allStatuses)
+                ->mapWithKeys(fn($status) => [$status => $statusCounts[$status] ?? 0]);
+
+            return $invoice;
+        });
+
+        return $this->success(new InvoiceCollection($invoices), 'List of vendor invoices history.');
+    }
+
     //show
     public function show($id)
     {
@@ -102,19 +163,18 @@ class InvoiceController extends Controller
         }
 
         $perPage = request()->query('per_page', config('pagination.per_page', 10));
-        $dateFilter = request()->query('date');
-        if ($dateFilter) {
-            try {
-                $dateFilter = Carbon::parse($dateFilter)->format('Y-m-d');
-            } catch (\Exception $e) {
-                return $this->failed('Invalid date format.', 422);
-            }
+        $dateFilter = $this->parseDateFilter(request()->query('date'));
+        if ($dateFilter instanceof \Illuminate\Http\JsonResponse) {
+            return $dateFilter; // return error if invalid
         }
+
         $vendorId = $user->vendor->id;
 
-        // Vendor invoices
         $vendorInvoices = VendorInvoice::query()
             ->where('vendor_id', $vendorId)
+            ->whereHas('invoices.package', function ($query) {
+                $query->whereNotIn('status', ['completed', 'cancelled']);
+            })
             ->with([
                 'vendor',
                 'invoices',
@@ -126,45 +186,99 @@ class InvoiceController extends Controller
             ->when($dateFilter, fn($query, $date) => $query->whereDate('created_at', $date))
             ->paginate($perPage);
 
-        // Initialize overall package summary
-        $packageSummary = [
+        $packageSummary = $this->calculatePackageSummary($vendorInvoices);
+
+        return $this->success([
+            'vendor_invoices' => $vendorInvoices,
+            'package_summary' => $packageSummary,
+        ], 'List of current vendor invoices.');
+    }
+
+    /**
+     * Show history (completed or cancelled invoices)
+     */
+    public function vendorInvoiceHistory()
+    {
+        $user = auth()->user();
+        if (!$user || !$user->vendor) {
+            return $this->failed('Unauthorized access.', 403);
+        }
+
+        $perPage = request()->query('per_page', config('pagination.per_page', 10));
+        $dateFilter = $this->parseDateFilter(request()->query('date'));
+        if ($dateFilter instanceof \Illuminate\Http\JsonResponse) {
+            return $dateFilter;
+        }
+
+        $vendorId = $user->vendor->id;
+
+        // Vendor invoices
+        $vendorInvoices = VendorInvoice::query()
+            ->where('vendor_id', $vendorId)
+            ->whereHas('invoices.package', function ($query) {
+                $query->whereIn('status', ['completed', 'cancelled']);
+            })
+            ->with([
+                'vendor',
+                'invoices',
+                'invoices.customer',
+                'invoices.driver',
+                'invoices.package',
+                'invoices.vendor',
+            ])
+            ->when($dateFilter, fn($query, $date) => $query->whereDate('created_at', $date))
+            ->paginate($perPage);
+
+        $packageSummary = $this->calculatePackageSummary($vendorInvoices);
+
+        return $this->success([
+            'vendor_invoices' => $vendorInvoices,
+            'package_summary' => $packageSummary,
+        ], 'List of vendor invoice history.');
+    }
+
+    /**
+     * Helper: Parse and validate date filter
+     */
+    protected function parseDateFilter($date)
+    {
+        if (!$date) {
+            return null;
+        }
+        try {
+            return \Carbon\Carbon::parse($date)->format('Y-m-d');
+        } catch (\Exception $e) {
+            return $this->failed('Invalid date format.', 422);
+        }
+    }
+
+    /**
+     * Helper: Calculate package summary
+     */
+    protected function calculatePackageSummary($vendorInvoices)
+    {
+        $summary = [
             'total' => 0,
             'completed' => 0,
             'pending' => 0,
             'in_transit' => 0,
             'cancelled' => 0,
+            'payment_status' => 'unpaid',
         ];
 
-        // Iterate over all vendor invoices and accumulate package counts
         foreach ($vendorInvoices as $vendorInvoice) {
-            foreach ($vendorInvoice->invoice as $invoice) {
+            foreach ($vendorInvoice->invoices as $invoice) {
                 if ($invoice->package) {
-                    $packageSummary['total']++;
-
-                    switch ($invoice->package->status) {
-                        case 'completed':
-                            $packageSummary['completed']++;
-                            break;
-                        case 'pending':
-                            $packageSummary['pending']++;
-                            break;
-                        case 'in_transit':
-                            $packageSummary['in_transit']++;
-                            break;
-                        case 'cancelled':
-                            $packageSummary['cancelled']++;
-                            break;
+                    $summary['total']++;
+                    $status = $invoice->package->status;
+                    if (isset($summary[$status])) {
+                        $summary[$status]++;
                     }
                 }
             }
         }
 
-        $packageSummary['payment_status'] = 'unpaid'; // Add payment status
-
-        return $this->success([
-            'vendor_invoices' => $vendorInvoices,
-            'package_summary' => $packageSummary, // Attach the package summary to the response
-        ], 'List of vendor invoices.');
+        return $summary;
     }
 
     //vendorInvoiceShow

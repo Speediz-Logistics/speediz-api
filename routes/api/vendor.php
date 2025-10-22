@@ -50,12 +50,16 @@ Route::prefix('vendor')->group(function () {
         //Invoice
         Route::prefix('invoice')->group(function () {
             Route::get('', [InvoiceController::class, 'index'])->name('vendor.invoice.index');
+            //history
+            Route::get('history', [InvoiceController::class, 'history'])->name('vendor.invoice.history');
             Route::get('{id}', [InvoiceController::class, 'show'])->name('vendor.invoice.show');
         });
 
         //Vendor Invoice
         Route::prefix('vendor-invoice')->group(function () {
             Route::get('', [InvoiceController::class, 'vendorInvoice'])->name('vendor.vendor-invoice.index');
+            //history
+            Route::get('history', [InvoiceController::class, 'vendorInvoiceHistory'])->name('vendor.vendor-invoice.history');
             Route::get('{id}', [InvoiceController::class, 'vendorInvoiceShow'])->name('vendor.vendor-invoice.show');
         });
     });
