@@ -22,7 +22,7 @@ services:
       - ./:/var/www
       - ~/.ssh:/root/.ssh
     depends_on:
-      - db
+#      - db
       - redis  
     networks:
       - laravel
