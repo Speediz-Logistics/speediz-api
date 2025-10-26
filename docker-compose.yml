@@ -8,7 +8,7 @@ services:
   app:
     build:
       args:
-        user: "www-data"
+        user: developer
         uid: 1000
       context: ./
       dockerfile: Dockerfile
