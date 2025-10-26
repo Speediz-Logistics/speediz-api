@@ -63,7 +63,7 @@ services:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d
       - ./docker-compose/nginx/ssl:/etc/nginx/conf.d/ssl
-      - ./docker-compose/nginx/phpmyadmin.conf:/etc/nginx/conf.d/phpmyadmin.conf
+#      - ./docker-compose/nginx/phpmyadmin.conf:/etc/nginx/conf.d/phpmyadmin.conf
     networks:
       - laravel
 
