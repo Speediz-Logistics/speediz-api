@@ -70,22 +70,22 @@ services:
 ####################################################################################################
 # phpMyAdmin
 ####################################################################################################      
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin-rifive-laravel
-    ports:
-        - 8080:80
-    links:
-        - db
-    restart: unless-stopped
-    environment:
-        PMA_HOST: db
-        #PMA_USER: ${DB_USERNAME}
-        #PMA_PASSWORD: ${DB_PASSWORD}
-        PMA_PORT: 3306
-        PMA_ARBITRARY: 1
-    networks:
-        - laravel
+#  phpmyadmin:
+#    image: phpmyadmin/phpmyadmin:latest
+#    container_name: phpmyadmin-rifive-laravel
+#    ports:
+#        - 8080:80
+#    links:
+#        - db
+#    restart: unless-stopped
+#    environment:
+#        PMA_HOST: db
+#        #PMA_USER: ${DB_USERNAME}
+#        #PMA_PASSWORD: ${DB_PASSWORD}
+#        PMA_PORT: 3306
+#        PMA_ARBITRARY: 1
+#    networks:
+#        - laravel
 
  ####################################################################################################
 # Redis
