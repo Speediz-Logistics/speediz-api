@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Delivery;
 
 use App\Constants\ConstUserRole;
 use App\Traits\BaseApiResponse;
+use App\Traits\UploadImage;
 use Illuminate\Http\Request;
 use App\Models\Driver;
 use App\Models\User;
@@ -14,7 +15,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    use BaseApiResponse;
+    use BaseApiResponse, UploadImage;
 
     // Register a new driver
     public function register(Request $request)
@@ -48,6 +49,13 @@ class AuthController extends Controller
 
         // Dispatch email verification notification
         $user->sendEmailVerificationNotification();
+
+        $image = null;
+        // Handle image upload if provided
+        if (isset($validatedData['image'])) {
+            $image = $this->upload($request, 'image');
+            $validatedData['image'] = $image;
+        }
 
         // Create Driver
         $driver = Driver::create([
