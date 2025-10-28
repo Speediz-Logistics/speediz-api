@@ -54,20 +54,20 @@ services:
 ####################################################################################################
 # Nginx
 ####################################################################################################
-#  nginx:
-#    image: nginx:alpine
-#    container_name: nginx-rifive-laravel
-#    restart: unless-stopped
-#    ports:
-#      - 80:80
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-rifive-laravel
+    restart: unless-stopped
+    ports:
+      - 9000:9000
 #      - 443:443
-#    volumes:
-#      - ./:/var/www
-#      - ./docker-compose/nginx:/etc/nginx/conf.d
-#      - ./docker-compose/nginx/ssl:/etc/nginx/conf.d/ssl
-##      - ./docker-compose/nginx/phpmyadmin.conf:/etc/nginx/conf.d/phpmyadmin.conf
-#    networks:
-#      - laravel
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+      - ./docker-compose/nginx/ssl:/etc/nginx/conf.d/ssl
+#      - ./docker-compose/nginx/phpmyadmin.conf:/etc/nginx/conf.d/phpmyadmin.conf
+    networks:
+      - laravel
 
 ####################################################################################################
 # phpMyAdmin
