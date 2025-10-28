@@ -2,9 +2,9 @@ version: "3.7"
 
 services:
 
-####################################################################################################
-# app
-####################################################################################################
+  ####################################################################################################
+  # app
+  ####################################################################################################
   app:
     build:
       args:
@@ -23,13 +23,13 @@ services:
       - ~/.ssh:/root/.ssh
     depends_on:
       - db
-      - redis  
+      - redis
     networks:
       - laravel
 
-####################################################################################################
-# DATABASE (MySQL)
-####################################################################################################
+  ####################################################################################################
+  # DATABASE (MySQL)
+  ####################################################################################################
   db:
     image: mysql:8.0
     container_name: mysql-rifive-laravel
@@ -49,57 +49,63 @@ services:
       - ./docker-compose/mysql/ql:/docker-entrypoint-initdb.d
     networks:
       - laravel
-####################################################################################################
-# Nginx
-####################################################################################################      
+
+  ####################################################################################################
+  # Nginx
+  ####################################################################################################
   nginx:
     image: nginx:alpine
     container_name: nginx-rifive-laravel
     restart: unless-stopped
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
       - ./:/var/www
       - ./docker-compose/nginx:/etc/nginx/conf.d
       - ./docker-compose/nginx/ssl:/etc/nginx/conf.d/ssl
-#      - ./docker-compose/nginx/phpmyadmin.conf:/etc/nginx/conf.d/phpmyadmin.conf
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - ./docker-compose/certbot/www:/var/www/certbot   # <-- Add this
+    depends_on:
+      - app
     networks:
       - laravel
 
-####################################################################################################
-# phpMyAdmin
-####################################################################################################      
-#  phpmyadmin:
-#    image: phpmyadmin/phpmyadmin:latest
-#    container_name: phpmyadmin-rifive-laravel
-#    ports:
-#        - 8080:80
-#    links:
-#        - db
-#    restart: unless-stopped
-#    environment:
-#        PMA_HOST: db
-#        #PMA_USER: ${DB_USERNAME}
-#        #PMA_PASSWORD: ${DB_PASSWORD}
-#        PMA_PORT: 3306
-#        PMA_ARBITRARY: 1
-#    networks:
-#        - laravel
+  ####################################################################################################
+  # Certbot
+  ####################################################################################################
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-var:/var/lib/letsencrypt
+      - ./docker-compose/certbot/www:/var/www/certbot   # <-- Add this
+    entrypoint: >
+      sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done"
 
- ####################################################################################################
-# Redis
-####################################################################################################
+  ####################################################################################################
+  # Redis
+  ####################################################################################################
   redis:
     image: "redis:alpine"
     container_name: ri-rifive-redis
     restart: unless-stopped
     volumes:
-        - ./docker-compose/redis/data:/data
+      - ./docker-compose/redis/data:/data
     ports:
       - "6379:6379"
     networks:
-      - laravel      
+      - laravel
+
+####################################################################################################
+# Volumes & Network
+####################################################################################################
+volumes:
+  certbot-etc:
+  certbot-var:
+
 networks:
   laravel:
     driver: bridge

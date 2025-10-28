@@ -25,12 +25,3 @@ RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 WORKDIR /var/www
 USER $user
-
-FROM nginx:alpine
-
-# Install Certbot + plugins for Nginx
-RUN apk update && apk add --no-cache certbot certbot-nginx
-
-EXPOSE 80 443
-
-CMD ["nginx", "-g", "daemon off;"]
