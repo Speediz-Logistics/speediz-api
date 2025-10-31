@@ -33,7 +33,7 @@ class AuthController extends Controller
             'gender' => 'required|string|in:male,female',
             'zone' => 'required|string|max:255',
             'contact_number' => 'required|string|max:15',
-            'image' => 'nullable|string',
+            'image' => 'nullable',
             'bank_name' => 'nullable|string|max:255',
             'bank_number' => 'nullable|string|max:255',
             'telegram_contact' => 'nullable|string|max:255',
