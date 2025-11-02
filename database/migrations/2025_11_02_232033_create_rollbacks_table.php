@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('rollbacks', function (Blueprint $table) {
             $table->id();
             //type
-            $table->string('type');
+            $table->string('type')->default('delivery'); // manual or automatic
             $table->unsignedBigInteger('package_id');
             $table->string('reason')->nullable();
             $table->unsignedBigInteger('user_id');

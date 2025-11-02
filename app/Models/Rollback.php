@@ -10,6 +10,7 @@ class Rollback extends Model
     use HasFactory;
 
     protected $fillable = [
+        'type',
         'package_id',
         'reason',
         'user_id',
