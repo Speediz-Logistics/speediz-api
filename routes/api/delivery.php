@@ -37,6 +37,8 @@ Route::prefix('delivery')->group(function () {
             Route::get('/{id}', [ExpressController::class, 'show'])->name('delivery.express.show');
             Route::post('/pickup', [DeliveryHomeController::class, 'pickupPackage'])->name('delivery.pickup-package');
             Route::post('/delivered', [DeliveryHomeController::class, 'deliveredPackage'])->name('delivery.delivered-package');
+            Route::post('/rollback', [DeliveryHomeController::class, 'rollbackDeliveredPackage'])->name('delivery.rollback-delivered-package');
+            Route::post('/cancel', [DeliveryHomeController::class, 'cancelDelivery'])->name('delivery.cancel-delivery');
         });
 
         //realtime tracking post

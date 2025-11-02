@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Delivery;
 
 use App\Constants\ConstPackageStatus;
+use App\Constants\ConstRollbackType;
 use App\Constants\ConstShipmentStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Delivery\HomeResource;
@@ -11,6 +12,7 @@ use App\Models\Driver;
 use App\Models\Invoice;
 use App\Models\Package;
 use App\Models\Revenue;
+use App\Models\Rollback;
 use App\Models\Shipment;
 use App\Traits\BaseApiResponse;
 use Illuminate\Http\Request;
@@ -167,6 +169,111 @@ class DeliveryHomeController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return $this->failed(null,'Failed to update package: ' . $e->getMessage(), 500);
+        }
+    }
+
+    //rollbackDeliveredPackage
+    public function rollbackDeliveredPackage(Request $request)
+    {
+        $user = auth()->user();
+        $driver = Driver::where('user_id', $user->id)->first();
+
+        if (!$driver) {
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
+        }
+
+        $package_id = $request->id;
+
+        try {
+            DB::beginTransaction();
+
+            // Verify package exists
+            $package = Package::query()->where('number', $package_id)->first();
+            if (!$package) {
+                return $this->failed(null,'Package not found', 'Package not found', 404);
+            }
+
+            // Update package
+            $package->update([
+                'status' => ConstPackageStatus::IN_TRANSIT,
+                'delivered_at' => null
+            ]);
+
+            // Update shipment
+            Shipment::where('package_id', $package_id)
+                ->update(['status' => ConstShipmentStatus::IN_TRANSIT]);
+
+            // Update delivery tracking
+            DeliveryTracking::where('package_id', $package_id)
+                ->update(['status' => ConstPackageStatus::IN_TRANSIT]);
+
+            //create rollback log
+            Rollback::query()->create([
+                'type' => ConstRollbackType::DELIVERY_ROLLBACK,
+                'package_id' => $package->id,
+                'reason' => $request->reason ?? 'No reason provided',
+                'user_id' => $user->id,
+            ]);
+
+            DB::commit();
+
+            return $this->success($package, 'Package rolled back to in transit successfully');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->failed(null,'Failed to update package: ' . $e->getMessage(), 500);
+        }
+    }
+
+    //cancelPackage cancelDelivery
+    public function cancelDelivery(Request $request)
+    {
+        $user = auth()->user();
+        $driver = Driver::where('user_id', $user->id)->first();
+
+        if (!$driver) {
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
+        }
+
+        $package_id = $request->id;
+
+        try {
+            DB::beginTransaction();
+
+            // Verify package exists
+            $package = Package::query()->where('number', $package_id)->first();
+            if (!$package) {
+                return $this->failed(null,'Package not found', 'Package not found', 404);
+            }
+
+            // Update package
+            $package->update([
+                'status' => ConstPackageStatus::CANCELLED,
+            ]);
+
+            // Update shipment
+            Shipment::where('package_id', $package_id)
+                ->update(['status' => ConstShipmentStatus::CANCELLED]);
+
+            // Update delivery tracking
+            DeliveryTracking::where('package_id', $package_id)
+                ->update(['status' => ConstPackageStatus::CANCELLED]);
+
+            //rollback log
+            Rollback::query()->create([
+                'type' => ConstRollbackType::DELIVERY_CANCELLED,
+                'package_id' => $package->id,
+                'reason' => $request->reason ?? 'No reason provided',
+                'user_id' => $user->id,
+            ]);
+
+            DB::commit();
+
+            return $this->success($package, 'Package cancelled successfully');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->failed(null,'Failed to cancel package: ' . $e->getMessage(), 500);
         }
     }
 
