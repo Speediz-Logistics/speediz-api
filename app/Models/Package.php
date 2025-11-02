@@ -91,4 +91,10 @@ class Package extends Model
     {
         return $this->belongsTo(PackageType::class);
     }
+
+    //get rollback records
+    public function rollbacks()
+    {
+        return $this->hasMany(Rollback::class);
+    }
 }

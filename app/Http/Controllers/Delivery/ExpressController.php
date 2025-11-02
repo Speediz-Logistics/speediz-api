@@ -40,6 +40,7 @@ class ExpressController extends Controller
                 'driver',
                 'shipment',
                 'invoice',
+                'rollbacks',
             ])
             ->where('driver_id', $driver->id)
             ->orderBy('updated_at', 'desc') // Order by updated_at first
@@ -81,6 +82,7 @@ class ExpressController extends Controller
                 'driver',
                 'shipment',
                 'invoice',
+                'rollbacks',
             ])
             ->where('driver_id', $driver->id)
             ->where('id', $id)
