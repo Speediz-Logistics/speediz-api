@@ -81,7 +81,7 @@ class PackageOptionController extends Controller
     {
         $query = Branch::query()
             ->select('id', 'name', 'phone')
-            ->orderBy('name'); // Changed from orderBy('id') to orderBy('name') for better UX
+            ->orderBy('id'); // Changed from orderBy('id') to orderBy('name') for better UX
 
         // Search filter
         if ($request->has('search') && !empty($request->search)) {
