@@ -7,7 +7,7 @@ use ReflectionClass;
 class ConstRollbackType
 {
     const DELIVERY_ROLLBACK = 'delivery_rollback';
-    const DELIVERY_CANCELLED = 'delivery_cancelled';
+    const DELIVERY_PENDING = 'delivery_pending';
 
     /**
      * Get all constants

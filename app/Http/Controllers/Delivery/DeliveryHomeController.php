@@ -82,24 +82,30 @@ class DeliveryHomeController extends Controller
 
         DB::beginTransaction();
         try {
-            // Update Package
-            $package->update([
-                'status' => ConstPackageStatus::IN_TRANSIT,
-                'picked_up_at' => now()
-            ]);
 
             // Update Shipment
-            Shipment::where('package_id', $package_id)
+            $shipment = Shipment::where('package_id', $package_id)
                 ->update(['status' => ConstShipmentStatus::IN_TRANSIT]);
 
             // Update Invoice (assign driver)
-            Invoice::where('package_id', $package_id)
+            $invoice = Invoice::where('package_id', $package_id)
                 ->update(['driver_id' => $driver->id]);
 
             // Create Delivery Tracking
-            DeliveryTracking::create([
+            $deliveryTracking = DeliveryTracking::create([
                 'package_id' => $package_id,
                 'status' => ConstPackageStatus::IN_TRANSIT,
+                'lat' => $request->lat ?? null,
+                'lng' => $request->lng ?? null,
+            ]);
+
+            // Update Package
+            $package->update([
+                'status' => ConstPackageStatus::IN_TRANSIT,
+                'delivery_tracking_id' => $deliveryTracking->id,
+                'shipment_id' => $shipment->id ?? null,
+                'invoice_id' => $invoice->id ?? null,
+                'picked_up_at' => now()
             ]);
 
             DB::commit();
@@ -140,11 +146,11 @@ class DeliveryHomeController extends Controller
             ]);
 
             // Update shipment
-            Shipment::where('package_id', $package_id)
+            $shipment = Shipment::where('package_id', $package_id)
                 ->update(['status' => ConstShipmentStatus::COMPLETED]);
 
             // Update delivery tracking
-            DeliveryTracking::where('package_id', $package_id)
+            $deliveryTracking = DeliveryTracking::where('package_id', $package_id)
                 ->update(['status' => ConstPackageStatus::COMPLETED]);
 
             // Get delivery fee
@@ -153,6 +159,10 @@ class DeliveryHomeController extends Controller
 
             // Create revenue
             $revenue = Revenue::create([
+                'driver_id' => $driver->id,
+                'package_id' => $package->id,
+                'shipment_id' => $shipment->id,
+                'delivery_tracking_id' => $deliveryTracking->id ?? null,
                 'name' => 'Delivery Fee ' . now()->format('Y-m-d'),
                 'description' => "{$driver->name} Delivery Fee for Package ID {$package_id}",
                 'amount' => $delivery_fee,
@@ -173,7 +183,7 @@ class DeliveryHomeController extends Controller
     }
 
     //rollbackDeliveredPackage
-    public function rollbackDeliveredPackage(Request $request)
+    public function rollbackCompletedPackage(Request $request)
     {
         $user = auth()->user();
         $driver = Driver::where('user_id', $user->id)->first();
@@ -188,24 +198,27 @@ class DeliveryHomeController extends Controller
             DB::beginTransaction();
 
             // Verify package exists
-            $package = Package::query()->where('number', $package_id)->first();
+            $package = Package::query()
+                ->where('number', $package_id)
+                ->where('status', ConstPackageStatus::COMPLETED)
+                ->first();
             if (!$package) {
                 return $this->failed(null,'Package not found', 'Package not found', 404);
             }
 
             // Update package
             $package->update([
-                'status' => ConstPackageStatus::IN_TRANSIT,
+                'status' => ConstPackageStatus::PENDING,
                 'delivered_at' => null
             ]);
 
             // Update shipment
             Shipment::where('package_id', $package_id)
-                ->update(['status' => ConstShipmentStatus::IN_TRANSIT]);
+                ->update(['status' => ConstShipmentStatus::PENDING]);
 
             // Update delivery tracking
             DeliveryTracking::where('package_id', $package_id)
-                ->update(['status' => ConstPackageStatus::IN_TRANSIT]);
+                ->update(['status' => ConstPackageStatus::PENDING]);
 
             //create rollback log
             Rollback::query()->create([
@@ -217,7 +230,7 @@ class DeliveryHomeController extends Controller
 
             DB::commit();
 
-            return $this->success($package, 'Package rolled back to in transit successfully');
+            return $this->success($package, 'Package rolled back to in pending successfully');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -225,7 +238,7 @@ class DeliveryHomeController extends Controller
         }
     }
 
-    //cancelPackage cancelDelivery
+    //cancelPackage cancelDelivery during delivery
     public function cancelDelivery(Request $request)
     {
         $user = auth()->user();
@@ -241,27 +254,30 @@ class DeliveryHomeController extends Controller
             DB::beginTransaction();
 
             // Verify package exists
-            $package = Package::query()->where('number', $package_id)->first();
+            $package = Package::query()
+                ->where('number', $package_id)
+                ->first();
+
             if (!$package) {
                 return $this->failed(null,'Package not found', 'Package not found', 404);
             }
 
             // Update package
             $package->update([
-                'status' => ConstPackageStatus::CANCELLED,
+                'status' => ConstPackageStatus::PENDING,
             ]);
 
             // Update shipment
             Shipment::where('package_id', $package_id)
-                ->update(['status' => ConstShipmentStatus::CANCELLED]);
+                ->update(['status' => ConstShipmentStatus::PENDING]);
 
             // Update delivery tracking
             DeliveryTracking::where('package_id', $package_id)
-                ->update(['status' => ConstPackageStatus::CANCELLED]);
+                ->update(['status' => ConstPackageStatus::PENDING]);
 
             //rollback log
             Rollback::query()->create([
-                'type' => ConstRollbackType::DELIVERY_CANCELLED,
+                'type' => ConstRollbackType::DELIVERY_PENDING,
                 'package_id' => $package->id,
                 'reason' => $request->reason ?? 'No reason provided',
                 'user_id' => $user->id,
