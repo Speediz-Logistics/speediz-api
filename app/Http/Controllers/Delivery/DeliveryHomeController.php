@@ -200,7 +200,6 @@ class DeliveryHomeController extends Controller
             // Verify package exists
             $package = Package::query()
                 ->where('number', $package_id)
-                ->where('status', ConstPackageStatus::CANCELLED)
                 ->first();
             if (!$package) {
                 return $this->failed(null,'Package not found', 'Package not found', 404);
