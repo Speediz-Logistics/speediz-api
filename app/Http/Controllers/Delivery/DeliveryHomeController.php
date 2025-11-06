@@ -208,17 +208,17 @@ class DeliveryHomeController extends Controller
 
             // Update package
             $package->update([
-                'status' => ConstPackageStatus::CANCELLED,
+                'status' => ConstPackageStatus::PENDING,
                 'delivered_at' => null
             ]);
 
             // Update shipment
             Shipment::where('package_id', $package_id)
-                ->update(['status' => ConstShipmentStatus::CANCELLED]);
+                ->update(['status' => ConstShipmentStatus::PENDING]);
 
             // Update delivery tracking
             DeliveryTracking::where('package_id', $package_id)
-                ->update(['status' => ConstPackageStatus::CANCELLED]);
+                ->update(['status' => ConstPackageStatus::PENDING]);
 
             //create rollback log
             Rollback::query()->create([
@@ -264,20 +264,20 @@ class DeliveryHomeController extends Controller
 
             // Update package
             $package->update([
-                'status' => ConstPackageStatus::PENDING,
+                'status' => ConstPackageStatus::CANCELLED,
             ]);
 
             // Update shipment
             Shipment::where('package_id', $package_id)
-                ->update(['status' => ConstShipmentStatus::PENDING]);
+                ->update(['status' => ConstShipmentStatus::CANCELLED]);
 
             // Update delivery tracking
             DeliveryTracking::where('package_id', $package_id)
-                ->update(['status' => ConstPackageStatus::PENDING]);
+                ->update(['status' => ConstPackageStatus::CANCELLED]);
 
             //rollback log
             Rollback::query()->create([
-                'type' => ConstRollbackType::DELIVERY_PENDING,
+                'type' => ConstRollbackType::DELIVERY_CANCEL,
                 'package_id' => $package->id,
                 'reason' => $request->reason ?? 'No reason provided',
                 'user_id' => $user->id,
