@@ -159,9 +159,9 @@ class DeliveryHomeController extends Controller
 
             // Create revenue
             $revenue = Revenue::create([
-                'driver_id' => $driver->id,
-                'package_id' => $package->id,
-                'shipment_id' => $shipment->id,
+                'driver_id' => $driver->id ?? null,
+                'package_id' => $package->id ?? null,
+                'shipment_id' => $shipment->id ?? null,
                 'delivery_tracking_id' => $deliveryTracking->id ?? null,
                 'name' => 'Delivery Fee ' . now()->format('Y-m-d'),
                 'description' => "{$driver->name} Delivery Fee for Package ID {$package_id}",
@@ -200,7 +200,7 @@ class DeliveryHomeController extends Controller
             // Verify package exists
             $package = Package::query()
                 ->where('number', $package_id)
-                ->where('status', ConstPackageStatus::COMPLETED)
+                ->where('status', ConstPackageStatus::CANCELLED)
                 ->first();
             if (!$package) {
                 return $this->failed(null,'Package not found', 'Package not found', 404);
@@ -208,17 +208,17 @@ class DeliveryHomeController extends Controller
 
             // Update package
             $package->update([
-                'status' => ConstPackageStatus::PENDING,
+                'status' => ConstPackageStatus::CANCELLED,
                 'delivered_at' => null
             ]);
 
             // Update shipment
             Shipment::where('package_id', $package_id)
-                ->update(['status' => ConstShipmentStatus::PENDING]);
+                ->update(['status' => ConstShipmentStatus::CANCELLED]);
 
             // Update delivery tracking
             DeliveryTracking::where('package_id', $package_id)
-                ->update(['status' => ConstPackageStatus::PENDING]);
+                ->update(['status' => ConstPackageStatus::CANCELLED]);
 
             //create rollback log
             Rollback::query()->create([
