@@ -174,7 +174,7 @@ class PackageController extends Controller
             'slug' => 'required|string',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable',
             'zone' => 'nullable|string|max:255',
 
             'Customer_first_name' => 'nullable|string|max:255',
