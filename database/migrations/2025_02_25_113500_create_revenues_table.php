@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('revenues', function (Blueprint $table) {
             $table->id();
+            //package id
+            $table->unsignedBigInteger('package_id');
+            //driver id
+            $table->unsignedBigInteger('driver_id');
+            //shipment id
+            $table->unsignedBigInteger('shipment_id');
+            //$deliveryTracking
+            $table->unsignedBigInteger('delivery_tracking_id');
             $table->string('name');
             $table->string('description')->nullable();
             $table->decimal('amount', 10, 2);

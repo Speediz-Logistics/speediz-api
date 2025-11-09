@@ -9,8 +9,10 @@ use App\Http\Resources\Vendor\PackageShowResource;
 use App\Models\Customer;
 use App\Models\DeliveryTracking;
 use App\Models\Driver;
+use App\Models\Invoice;
 use App\Models\Location;
 use App\Models\Vendor;
+use App\Models\VendorInvoice;
 use App\Traits\BaseApiResponse;
 use App\Traits\UploadImage;
 use Illuminate\Http\Request;
@@ -172,7 +174,7 @@ class PackageController extends Controller
             'slug' => 'required|string',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable',
             'zone' => 'nullable|string|max:255',
 
             'Customer_first_name' => 'nullable|string|max:255',
@@ -182,6 +184,8 @@ class PackageController extends Controller
             'location' => 'nullable|string|max:255',
             'lat' => 'nullable|numeric',
             'lng' => 'nullable|numeric',
+
+            'driver_id' => 'nullable',
 
             'status' => 'nullable|string',
         ]);
@@ -219,6 +223,7 @@ class PackageController extends Controller
 
         $user = auth()->user();
         $vendor = Vendor::where('user_id', $user->id)->first();
+        $deliveryFee = \App\Models\DeliveryFee::first();
 
         // Create package
         $package = Package::create([
@@ -235,15 +240,27 @@ class PackageController extends Controller
             'status' => $validatedData['status'] ?? ConstPackageStatus::PENDING,
         ]);
 
+        //create vendor_invoice_id
+        $vendorInvoice = VendorInvoice::create([
+            'vendor_id' => $vendor->id,
+            'invoice_number' => 'VINV-' . $validatedData['number'],
+            'total' => $deliveryFee ? $deliveryFee->fee : 0,
+            'description' => 'Invoice for package ' . $validatedData['number'],
+            'status' => ConstInvoiceStatus::UNPAID,
+        ]);
+
         //create invoice for the package
         $package->invoice()->create([
+            'vendor_invoice_id' => $vendorInvoice->id,
             'customer_id' => $customer->id,
             'vendor_id' => $vendor->id,
             'package_id' => $package->id,
+            'driver_id' => $validatedData['driver_id'] ?? null,
             'number' => 'INV-' . $package->number,
-            'total' => $package->price,
             'date' => now(),
+            'total' => $deliveryFee ? $deliveryFee->fee : 0,
             'status' => ConstInvoiceStatus::UNPAID,
+            'note' => 'Invoice for package ' . $package->number,
         ]);
 
         return $this->success(
