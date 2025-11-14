@@ -214,9 +214,9 @@ class PackageController extends Controller
 
         // Create location if provided
         $locationData = array_filter([
-            'location' => $validatedData['location'] ?? null,
-            'lat' => $validatedData['lat'] ?? null,
-            'lng' => $validatedData['lng'] ?? null,
+            'location' => $validatedData['customer_location'] ?? null,
+            'lat' => $validatedData['customer_lat'] ?? null,
+            'lng' => $validatedData['customer_lng'] ?? null,
         ]);
 
         $location = !empty($locationData) ? Location::create($locationData) : null;
