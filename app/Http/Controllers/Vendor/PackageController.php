@@ -177,13 +177,13 @@ class PackageController extends Controller
             'image' => 'nullable',
             'zone' => 'nullable|string|max:255',
 
-            'Customer_first_name' => 'nullable|string|max:255',
-            'Customer_last_name' => 'nullable|string|max:255',
-            'Customer_phone' => 'nullable|string|max:15',
+            'customer_first_name' => 'nullable|string|max:255',
+            'customer_last_name' => 'nullable|string|max:255',
+            'customer_phone' => 'nullable|string|max:15',
 
-            'location' => 'nullable|string|max:255',
-            'lat' => 'nullable|numeric',
-            'lng' => 'nullable|numeric',
+            'customer_location' => 'nullable|string|max:255',
+            'customer_lat' => 'nullable|numeric',
+            'customer_lng' => 'nullable|numeric',
 
             'driver_id' => 'nullable',
 
