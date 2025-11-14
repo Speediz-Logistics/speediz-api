@@ -202,12 +202,12 @@ class PackageController extends Controller
 
         // Check if customer exists or create a new one
         $customer = null;
-        if (!empty($validatedData['Customer_phone']) && !empty($validatedData['Customer_first_name']) && !empty($validatedData['Customer_last_name'])) {
+        if (!empty($validatedData['customer_phone']) && !empty($validatedData['customer_first_name']) && !empty($validatedData['customer_last_name'])) {
             $customer = Customer::firstOrCreate(
-                ['phone' => $validatedData['Customer_phone']],
+                ['phone' => $validatedData['customer_phone']],
                 [
-                    'first_name' => $validatedData['Customer_first_name'] ?? null,
-                    'last_name' => $validatedData['Customer_last_name'] ?? null,
+                    'first_name' => $validatedData['customer_first_name'] ?? null,
+                    'last_name' => $validatedData['customer_last_name'] ?? null,
                 ]
             );
         }
