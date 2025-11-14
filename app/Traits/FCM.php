@@ -13,7 +13,7 @@ trait FCM
     protected function messaging(): Messaging
     {
         return (new Factory)
-            ->withServiceAccount(config('firebase.credentials.file'))
+            ->withServiceAccount(storage_path('/app/firebase/firebase_credentials.json'))
             ->createMessaging();
     }
 
