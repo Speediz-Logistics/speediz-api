@@ -51,7 +51,7 @@ return [
              */
 
             'credentials' => [
-                'file' => "/var/www/speediz-api/public/speediz-mobile-firebase-adminsdk-fbsvc-f974c24e0c.json",
+                'file' => env('FIREBASE_CREDENTIALS'),
             ],
 
             /*
