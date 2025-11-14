@@ -12,8 +12,9 @@ trait FCM
 {
     protected function messaging(): Messaging
     {
+        $config = storage_path('app/public/firebase_credentials.json');;
         return (new Factory)
-            ->withServiceAccount(storage_path('/app/firebase/firebase_credentials.json'))
+            ->withServiceAccount($config)
             ->createMessaging();
     }
 
