@@ -12,6 +12,7 @@ trait FCM
 {
     protected function messaging(): Messaging
     {
+        logger(config('firebase.credentials'));
         return (new Factory)
             ->withServiceAccount(config('firebase.credentials'))
             ->createMessaging();
