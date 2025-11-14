@@ -63,7 +63,9 @@ class DriverManagementController extends Controller
         $package->save();
 
         //push notification to driver
+        logger("Preparing to send FCM to Driver ID: " . $driver->id);
         if ($driver->user && $driver->user->device_token) {
+            logger("Sending FCM to Driver ID: " . $driver->id . " Token: " . $driver->user->device_token);
             $title = 'New Shipment Assigned';
             $body = 'You have been assigned a new shipment: ' . $shipment->number;
             $data = [

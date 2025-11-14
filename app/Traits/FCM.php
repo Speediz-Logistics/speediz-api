@@ -34,12 +34,15 @@ trait FCM
 
             $fcm = $this->messaging()->send($message);
 
-            Notification::query()->create([
+            $notification = Notification::query()->create([
                 'user_id' => $userId,
                 'title' => $title,
                 'body' => $body,
                 'image_url' => $data['image_url'] ?? null,
             ]);
+
+            //log fcm
+            Log::info("FCM sent to token: " . $token . " Message ID: " . $notification->id);
             return true;
 
         } catch (Throwable $e) {

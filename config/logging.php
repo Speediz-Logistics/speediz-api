@@ -51,6 +51,17 @@ return [
     */
 
     'channels' => [
+
+        //fcm
+        'fcm' => [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'with' => [
+                'stream' => storage_path('logs/fcm.log'),
+            ],
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],
