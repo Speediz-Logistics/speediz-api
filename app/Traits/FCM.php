@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Notification;
 use Kreait\Firebase\Messaging;
 use Kreait\Firebase\Factory;
 use Illuminate\Support\Facades\Log;
@@ -19,7 +20,7 @@ trait FCM
     /**
      * Send FCM Notification to Device Token
      */
-    public function sendToToken(string $token, string $title, string $body, array $data = []): bool
+    public function sendToToken(string $userId,string $token, string $title, string $body, array $data = []): bool
     {
         try {
             $message = [
@@ -31,7 +32,14 @@ trait FCM
                 'data' => $data,
             ];
 
-            $this->messaging()->send($message);
+            $fcm = $this->messaging()->send($message);
+
+            Notification::query()->create([
+                'user_id' => $userId,
+                'title' => $title,
+                'body' => $body,
+                'image_url' => $data['image_url'] ?? null,
+            ]);
             return true;
 
         } catch (Throwable $e) {
@@ -56,6 +64,13 @@ trait FCM
             ];
 
             $this->messaging()->send($message);
+
+            Notification::query()->create([
+                'user_id' => null,
+                'title' => $title,
+                'body' => $body,
+                'image_url' => $data['image_url'] ?? null,
+            ]);
             return true;
 
         } catch (Throwable $e) {
