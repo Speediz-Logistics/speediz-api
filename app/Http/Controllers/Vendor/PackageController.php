@@ -51,7 +51,7 @@ class PackageController extends Controller
             //status in pending and in_transit
             ->whereIn('status', ['pending', 'in_transit'])
             ->with([
-                'vendor',
+                'driver',
                 'shipment',
                 'invoice',
                 'location',
@@ -292,7 +292,7 @@ class PackageController extends Controller
         }
 
         $package = Package::query()
-            ->with(['vendor', 'shipment', 'invoice', 'location', 'customer'])
+            ->with(['driver', 'shipment', 'invoice', 'location', 'customer'])
             ->where('vendor_id', $vendor->id) // Ensure the package belongs to this vendor
             ->find($id);
 
