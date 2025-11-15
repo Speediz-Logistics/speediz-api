@@ -25,7 +25,7 @@ class PackageResource extends JsonResource
             'image' => $this->image,
             'zone' => $this->zone,
             'status' => $this->status,
-            'vendor' => new VendorResource($this->vendor),
+            'driver' => new DriverResource($this->driver),
             'customer' => new CustomerResource($this->customer),
             'locations' => new LocationResource($this->location),
             'shipment' => new ShipmentResource($this->shipment),
