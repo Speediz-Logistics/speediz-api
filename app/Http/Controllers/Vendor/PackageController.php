@@ -494,7 +494,7 @@ class PackageController extends Controller
     {
         //get package location
         $tracking = Package::query()
-            ->with(['location'])
+            ->with(['location', 'driver'])
             ->find($id);
 
         if (!$tracking) {
