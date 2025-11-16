@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
          *  ADMIN USER
          *  ------------------------------------------------- */
         $adminUser = User::create([
-            'email' => 'admin@example.com',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('password'),
             'role' => ConstUserRole::ADMIN,
             'email_verified_at' => Carbon::now(),
@@ -46,14 +46,14 @@ class UserSeeder extends Seeder
          *  EMPLOYEE USER
          *  ------------------------------------------------- */
         $employeeUser = User::create([
-            'email' => 'employee@example.com',
+            'email' => 'employee@gmail.com',
             'password' => Hash::make('password'),
             'role' => ConstUserRole::EMPLOYEE,
             'email_verified_at' => Carbon::now(),
         ]);
 
         Employee::create([
-            'first_name' => 'John',
+            'first_name' => 'Yong',
             'last_name' => 'Employee',
             'contact_number' => '099887766',
             'image' => $image2,
@@ -66,23 +66,23 @@ class UserSeeder extends Seeder
          *  VENDOR USER
          *  ------------------------------------------------- */
         $vendorUser = User::create([
-            'email' => 'vendor@example.com',
+            'email' => 'vendor@gmail.com',
             'password' => Hash::make('password'),
             'role' => ConstUserRole::VENDOR,
             'email_verified_at' => Carbon::now(),
         ]);
 
         Vendor::create([
-            'first_name' => 'Sopheak',
+            'first_name' => 'Yong',
             'last_name' => 'Vendor',
-            'business_name' => 'Sopheak Electronics',
+            'business_name' => 'Yong Electronics',
             'business_type' => 'Electronics',
             'business_description' => 'Selling digital products',
             'dob' => '1995-02-05',
             'gender' => 'male',
             'address' => 'Phnom Penh',
-            'lat' => '11.5564',
-            'lng' => '104.9282',
+            'lat' => 11.565512262856975,
+            'lng' => 104.89838885047813,
             'contact_number' => '098765432',
             'image' => $image3,
             'bank_name' => 'ABA',
@@ -96,7 +96,7 @@ class UserSeeder extends Seeder
          *  DELIVERY / DRIVER USER
          *  ------------------------------------------------- */
         $driverUser = User::create([
-            'email' => 'driver@example.com',
+            'email' => 'driver@gmail.com',
             'password' => Hash::make('password'),
             'role' => ConstUserRole::DELIVERY,
             'email_verified_at' => Carbon::now(),

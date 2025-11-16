@@ -23,5 +23,7 @@ class DatabaseSeeder extends Seeder
 //        $user->save();
 
         $this->call(UserSeeder::class);
+        $this->call(BranchSeeder::class);
+        $this->call(PackageTypeSeeder::class);
     }
 }

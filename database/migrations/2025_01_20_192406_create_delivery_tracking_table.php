@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('package_id')->nullable();
             $table->string('status');
-            $table->string('lat')->nullable();
-            $table->string('lng')->nullable();
+            $table->double('lat')->nullable();
+            $table->double('lng')->nullable();
             $table->timestamps();
         });
     }

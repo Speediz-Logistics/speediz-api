@@ -21,8 +21,8 @@ return new class extends Migration
             $table->date('dob')->nullable();
             $table->string('gender', 10)->nullable();
             $table->text('address')->nullable();
-            $table->string('lat')->nullable();
-            $table->string('lng')->nullable();
+            $table->double('lat')->nullable();
+            $table->double('lng')->nullable();
             $table->string('contact_number', 20)->nullable();
             $table->string('image')->nullable();
             $table->string("bank_name")->nullable();

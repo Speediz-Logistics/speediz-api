@@ -27,6 +27,13 @@ class BranchSeeder extends Seeder
                 'lat' => 11.558556,
                 'lng' => 104.931497,
             ],
+            [
+                'name' => 'Orussey Market',
+                'address' => 'Oknha Tep Phan St. (182), Phnom Penh, Cambodia',
+                'phone' => '+855 23 777 666',
+                'lat' => 11.562790386757293,
+                'lng' => 104.91706988033066,
+            ]
         ]);
     }
 }
