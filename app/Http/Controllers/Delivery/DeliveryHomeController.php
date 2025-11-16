@@ -84,11 +84,11 @@ class DeliveryHomeController extends Controller
         try {
 
             // Update Shipment
-            $shipment = Shipment::where('package_id', $package_id)
+            $shipment = Shipment::where('package_id', $request->id)
                 ->update(['status' => ConstShipmentStatus::IN_TRANSIT]);
 
             // Update Invoice (assign driver)
-            $invoice = Invoice::where('package_id', $package_id)
+            $invoice = Invoice::where('package_id', $request->id)
                 ->update(['driver_id' => $driver->id]);
 
             // Create Delivery Tracking
@@ -103,8 +103,8 @@ class DeliveryHomeController extends Controller
             $package->update([
                 'status' => ConstPackageStatus::IN_TRANSIT,
                 'delivery_tracking_id' => $deliveryTracking->id,
-                'shipment_id' => $shipment->id ?? null,
-                'invoice_id' => $invoice->id ?? null,
+                'shipment_id' => $shipment->id,
+                'invoice_id' => $invoice->id,
                 'picked_up_at' => now()
             ]);
 

@@ -263,6 +263,10 @@ class PackageController extends Controller
             'note' => 'Invoice for package ' . $package->number,
         ]);
 
+        //update package with invoice id
+        $package->invoice_id = $package->invoice->id;
+        $package->save();
+
         return $this->success(
             $package,
             'Package Created',
