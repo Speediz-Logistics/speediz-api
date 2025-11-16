@@ -24,7 +24,8 @@ class User extends Authenticatable
         'password',
         'account_status',
         'email_verified_at',
-        'remember_token'
+        'remember_token',
+        'device_token'
     ];
 
     /**
@@ -71,5 +72,18 @@ class User extends Authenticatable
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyRegisterEmail);
+    }
+
+    //device token update function
+    public function updateDeviceToken($deviceToken)
+    {
+        $this->device_token = $deviceToken;
+        $this->save();
+    }
+
+    //notifications relationship
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
 }

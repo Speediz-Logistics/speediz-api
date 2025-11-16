@@ -11,12 +11,13 @@ use App\Models\Shipment;
 use App\Models\Vendor;
 use App\Models\VendorInvoice;
 use App\Traits\BaseApiResponse;
+use App\Traits\FCM;
 use Faker\Core\Number;
 use Illuminate\Http\Request;
 
 class DriverManagementController extends Controller
 {
-    use BaseApiResponse;
+    use BaseApiResponse, FCM;
     //assignDriver
     public function assignDriver(Request $request)
     {
@@ -60,6 +61,19 @@ class DriverManagementController extends Controller
         $package->driver_id = $request->driver_id;
         $package->shipment_id = $shipment->id;
         $package->save();
+
+        //push notification to driver
+        logger("Preparing to send FCM to Driver ID: " . $driver->id);
+        if ($driver->user && $driver->user->device_token) {
+            logger("Sending FCM to Driver ID: " . $driver->id . " Token: " . $driver->user->device_token);
+            $title = 'New Shipment Assigned';
+            $body = 'You have been assigned a new shipment: ' . $shipment->number;
+            $data = [
+                'shipment_id' => $shipment->id,
+                'package_id' => $package->id,
+            ];
+            $this->sendToToken($driver->user->id, $driver->user->device_token, $title, $body, $data);
+        }
 
         //return response
         return $this->success($package, 'Driver assigned successfully');

@@ -21,6 +21,8 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable(); // Email verification timestamp
             $table->string('password'); // Password for authentication
             $table->boolean('account_status')->default(1);
+            //device_token
+            $table->text('device_token')->nullable(); // Device token for push notifications
             $table->rememberToken(); // Token for "remember me" functionality
             $table->timestamps(); // Created at and updated at timestamps
         });

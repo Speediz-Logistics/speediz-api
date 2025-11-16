@@ -51,7 +51,7 @@ class PackageController extends Controller
             //status in pending and in_transit
             ->whereIn('status', ['pending', 'in_transit'])
             ->with([
-                'vendor',
+                'driver',
                 'shipment',
                 'invoice',
                 'location',
@@ -177,13 +177,13 @@ class PackageController extends Controller
             'image' => 'nullable',
             'zone' => 'nullable|string|max:255',
 
-            'Customer_first_name' => 'nullable|string|max:255',
-            'Customer_last_name' => 'nullable|string|max:255',
-            'Customer_phone' => 'nullable|string|max:15',
+            'customer_first_name' => 'nullable|string|max:255',
+            'customer_last_name' => 'nullable|string|max:255',
+            'customer_phone' => 'nullable|string|max:15',
 
-            'location' => 'nullable|string|max:255',
-            'lat' => 'nullable|numeric',
-            'lng' => 'nullable|numeric',
+            'customer_location' => 'nullable|string|max:255',
+            'customer_lat' => 'nullable|numeric',
+            'customer_lng' => 'nullable|numeric',
 
             'driver_id' => 'nullable',
 
@@ -202,21 +202,21 @@ class PackageController extends Controller
 
         // Check if customer exists or create a new one
         $customer = null;
-        if (!empty($validatedData['Customer_phone']) && !empty($validatedData['Customer_first_name']) && !empty($validatedData['Customer_last_name'])) {
+        if (!empty($validatedData['customer_phone']) && !empty($validatedData['customer_first_name']) && !empty($validatedData['customer_last_name'])) {
             $customer = Customer::firstOrCreate(
-                ['phone' => $validatedData['Customer_phone']],
+                ['phone' => $validatedData['customer_phone']],
                 [
-                    'first_name' => $validatedData['Customer_first_name'] ?? null,
-                    'last_name' => $validatedData['Customer_last_name'] ?? null,
+                    'first_name' => $validatedData['customer_first_name'] ?? null,
+                    'last_name' => $validatedData['customer_last_name'] ?? null,
                 ]
             );
         }
 
         // Create location if provided
         $locationData = array_filter([
-            'location' => $validatedData['location'] ?? null,
-            'lat' => $validatedData['lat'] ?? null,
-            'lng' => $validatedData['lng'] ?? null,
+            'location' => $validatedData['customer_location'] ?? null,
+            'lat' => $validatedData['customer_lat'] ?? null,
+            'lng' => $validatedData['customer_lng'] ?? null,
         ]);
 
         $location = !empty($locationData) ? Location::create($locationData) : null;
@@ -292,7 +292,7 @@ class PackageController extends Controller
         }
 
         $package = Package::query()
-            ->with(['vendor', 'shipment', 'invoice', 'location', 'customer'])
+            ->with(['driver', 'shipment', 'invoice', 'location', 'customer'])
             ->where('vendor_id', $vendor->id) // Ensure the package belongs to this vendor
             ->find($id);
 
