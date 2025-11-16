@@ -14,5 +14,12 @@ class Admin extends Model
         'phone',
         'username',
         'image',
+        'user_id',
     ];
+
+    // Define relationship to User
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

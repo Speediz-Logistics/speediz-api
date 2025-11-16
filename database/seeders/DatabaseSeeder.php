@@ -22,6 +22,6 @@ class DatabaseSeeder extends Seeder
 //        $user->password = bcrypt('admin123');
 //        $user->save();
 
-        \App\Models\Package::factory(25)->create();
+        $this->call(UserSeeder::class);
     }
 }
