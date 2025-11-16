@@ -28,7 +28,7 @@ class UserSeeder extends Seeder
          *  ------------------------------------------------- */
         $adminUser = User::create([
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Aa123123$'),
             'role' => ConstUserRole::ADMIN,
             'email_verified_at' => Carbon::now(),
         ]);
@@ -47,7 +47,7 @@ class UserSeeder extends Seeder
          *  ------------------------------------------------- */
         $employeeUser = User::create([
             'email' => 'employee@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Aa123123$'),
             'role' => ConstUserRole::EMPLOYEE,
             'email_verified_at' => Carbon::now(),
         ]);
@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
          *  ------------------------------------------------- */
         $vendorUser = User::create([
             'email' => 'vendor@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Aa123123$'),
             'role' => ConstUserRole::VENDOR,
             'email_verified_at' => Carbon::now(),
         ]);
@@ -97,7 +97,7 @@ class UserSeeder extends Seeder
          *  ------------------------------------------------- */
         $driverUser = User::create([
             'email' => 'driver@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('Aa123123$'),
             'role' => ConstUserRole::DELIVERY,
             'email_verified_at' => Carbon::now(),
         ]);

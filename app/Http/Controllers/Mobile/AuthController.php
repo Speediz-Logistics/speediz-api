@@ -17,6 +17,7 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+            'device_token' => 'nullable|string',
         ]);
 
         if (!Auth::attempt($credentials)) {
@@ -32,6 +33,11 @@ class AuthController extends Controller
             throw ValidationException::withMessages([
                 'email' => ['Your email address is not verified. Please verify your email before logging in.'],
             ]);
+        }
+
+        if (isset($credentials['device_token'])) {
+            $user->device_token = $credentials['device_token'];
+            $user->save();
         }
 
         // Generate token using Passport
