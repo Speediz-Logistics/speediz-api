@@ -150,8 +150,16 @@ class DeliveryHomeController extends Controller
                 ->update(['status' => ConstShipmentStatus::COMPLETED]);
 
             // Update delivery tracking
-            $deliveryTracking = DeliveryTracking::where('package_id', $package_id)
-                ->update(['status' => ConstPackageStatus::COMPLETED]);
+            $deliveryTracking = DeliveryTracking::where('package_id', $package_id)->first();
+
+            if ($deliveryTracking) {
+                $deliveryTracking->update([
+                    'status' => ConstPackageStatus::COMPLETED
+                ]);
+            } else {
+                return $this->failed(null, 'Delivery tracking not found', 404);
+            }
+
 
             // Get delivery fee
             $shipment = Shipment::where('package_id', $package_id)->first();
