@@ -43,6 +43,7 @@ class PackageShowResource extends JsonResource
                 'latitude' => $this->location->lat ?? null,
                 'longitude' => $this->location->lng ?? null,
             ],
+            'driver_location' => $this->whenLoaded('deliveryTracking'),
         ];
     }
 }
