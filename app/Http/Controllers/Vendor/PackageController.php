@@ -55,7 +55,8 @@ class PackageController extends Controller
                 'shipment',
                 'invoice',
                 'location',
-                'customer'
+                'customer',
+                'deliveryTracking'
             ])
             ->where('vendor_id', $vendor->id);
 
@@ -296,7 +297,7 @@ class PackageController extends Controller
         }
 
         $package = Package::query()
-            ->with(['driver', 'shipment', 'invoice', 'location', 'customer'])
+            ->with(['driver', 'shipment', 'invoice', 'location', 'customer', 'deliveryTracking'])
             ->where('vendor_id', $vendor->id) // Ensure the package belongs to this vendor
             ->find($id);
 
@@ -464,7 +465,7 @@ class PackageController extends Controller
         }
 
         // Check if the identifier is numeric (ID) or a package number (character)
-        $query = Package::query()->with(['vendor', 'shipment', 'invoice', 'location', 'customer']);
+        $query = Package::query()->with(['vendor', 'shipment', 'invoice', 'location', 'customer', 'deliveryTracking']);
 
         $query->where('number', $identifier); // Assuming 'package_number' is the field storing the character-based identifier
 
@@ -498,7 +499,7 @@ class PackageController extends Controller
     {
         //get package location
         $tracking = Package::query()
-            ->with(['location', 'driver'])
+            ->with(['location', 'driver', 'vendor', 'shipment', 'invoice', 'customer', 'deliveryTracking'])
             ->find($id);
 
         if (!$tracking) {
@@ -509,23 +510,6 @@ class PackageController extends Controller
                 404
             );
         }
-
-        //get delivery_tracking
-        $delivery_tracking = DeliveryTracking::query()
-            ->where('package_id', $id)
-            ->first();
-
-        if (!$delivery_tracking) {
-            return $this->failed(
-                null,
-                'Delivery Tracking Not Found',
-                'The delivery tracking for the package does not exist.',
-                404
-            );
-        }
-
-        $tracking->delivery_tracking = $delivery_tracking;
-
 
         return $this->success(
             $tracking,
