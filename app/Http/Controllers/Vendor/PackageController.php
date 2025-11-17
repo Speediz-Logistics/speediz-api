@@ -512,7 +512,7 @@ class PackageController extends Controller
         }
 
         return $this->success(
-            $tracking,
+            PackageShowResource::make($tracking),
             'Package Map Retrieved',
             'The package map details have been retrieved successfully.'
         );

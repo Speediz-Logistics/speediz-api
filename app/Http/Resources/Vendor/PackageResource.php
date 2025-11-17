@@ -27,7 +27,7 @@ class PackageResource extends JsonResource
             'status' => $this->status,
             'driver' => new DriverResource($this->driver),
             'customer' => new CustomerResource($this->customer),
-            'locations' => new LocationResource($this->location),
+            'destination' => new LocationResource($this->location),
             'shipment' => new ShipmentResource($this->shipment),
             'driver_location' => $this->whenLoaded('deliveryTracking'),
         ];
