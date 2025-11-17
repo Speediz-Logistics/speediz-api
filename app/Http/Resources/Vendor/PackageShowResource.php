@@ -37,6 +37,8 @@ class PackageShowResource extends JsonResource
                 'pickup_date' => $this->shipment->date ?? null,
                 'vendor_phone' => $this->vendor->contact_number ?? null,
                 'vendor_address' => $this->vendor->address ?? null,
+                'vendor_lat' => $this->vendor->lat ?? null,
+                'vendor_lng' => $this->vendor->lng ?? null,
             ],
             'destination' => [
                 'location' => $this->location->location ?? null,

@@ -23,6 +23,8 @@ class VendorResource extends JsonResource
             'business_type' => $this->business_type,
             'business_description' => $this->business_description,
             'dob' => $this->dob,
+            'lat' => $this->lat,
+            'lng' => $this->lng,
             'gender' => $this->gender,
             'address' => $this->address,
             'contact_number' => $this->contact_number,
