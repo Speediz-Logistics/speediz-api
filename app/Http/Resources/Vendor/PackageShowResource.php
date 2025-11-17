@@ -30,6 +30,7 @@ class PackageShowResource extends JsonResource
                 'package_status' => $this->status ?? null,
                 'driver_name' => $this->driver?->first_name . ' ' . $this->driver?->last_name ?? null,
                 'driver_phone' => $this->driver->contact_number ?? null,
+                'driver_type'  => $this->driver->driver_type ?? null,
                 'delivery_fee' => $this->shipment->delivery_fee ?? null,
             ],
             'vendor' => [
