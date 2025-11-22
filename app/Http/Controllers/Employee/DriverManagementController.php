@@ -6,6 +6,7 @@ use App\Constants\ConstShipmentStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Driver;
 use App\Models\Invoice;
+use App\Models\Notification;
 use App\Models\Package;
 use App\Models\Shipment;
 use App\Models\Vendor;
@@ -72,7 +73,20 @@ class DriverManagementController extends Controller
                 'shipment_id' => $shipment->id,
                 'package_id' => $package->id,
             ];
-            $this->sendToToken($driver->user->id, $driver->user->device_token, $title, $body, $data);
+
+            $this->sendFirebaseNotification(
+                body: $body ?? "Speediz Notification",
+                data: $data ?? [],
+                title: $title ?? "Speediz",
+                deviceToken: $driver->user->device_token,
+            );
+
+            Notification::query()->create([
+                'user_id' => $driver->user->id,
+                'title' => $title,
+                'body' => $body,
+                'data' => json_encode($data),
+            ]);
         }
 
         //return response

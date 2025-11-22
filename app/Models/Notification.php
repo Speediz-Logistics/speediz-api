@@ -14,6 +14,7 @@ class Notification extends Model
         'title',
         'body',
         'image_url',
+        'data',
         'is_read',
     ];
 

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('body');
             $table->string('image_url')->nullable();
+            $table->json('data')->nullable();
             $table->boolean('is_read')->default(false);
             $table->timestamps();
         });

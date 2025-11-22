@@ -2,104 +2,169 @@
 
 namespace App\Traits;
 
-use App\Models\Notification;
-use Kreait\Firebase\Messaging;
-use Kreait\Firebase\Factory;
-use Illuminate\Support\Facades\Log;
-use Throwable;
+use Google\Client as GoogleClient;
 
 trait FCM
 {
-    protected function messaging(): Messaging
-    {
-        $config = storage_path('app/public/firebase_credentials.json');;
-        return (new Factory)
-            ->withServiceAccount($config)
-            ->createMessaging();
-    }
-
-    /**
-     * Send FCM Notification to Device Token
-     */
-    public function sendToToken(string $userId,string $token, string $title, string $body, array $data = []): bool
-    {
+    public function sendFirebaseNotification(
+        string $body,
+        array $data = [],
+        string $topic = null,
+        string $title = "Notification",
+        string $image = null,
+        string $deviceToken = null,
+    ){
         try {
-            $message = [
-                'token' => $token,
-                'notification' => [
-                    'title' => $title,
-                    'body' => $body,
-                ],
-                'data' => $data,
+            $token = $this->getFireBaseAccessToken();
+            $url = env('FIREBASE_URL');
+
+            // Target (topic or device token)
+            $target = [];
+
+            if (!empty($topic)) {
+                $target['topic'] = $topic;
+            }
+
+            if (!empty($deviceToken)) {
+                $target['token'] = $deviceToken;
+            }
+
+            if (empty($target)) {
+                return [
+                    "success" => false,
+                    "message" => "Topic or Device Token must be provided",
+                ];
+            }
+
+            // Payload
+            $postData = [
+                "message" => array_merge($target, [
+                    "notification" => [
+                        "title" => $title,
+                        "body" => $body,
+                        "image" => $image,
+                    ],
+                    "data" => $this->stringifyData(array_merge([
+                        "click_action" => "FLUTTER_NOTIFICATION_CLICK",
+                    ], $data)),
+                    "android" => [
+                        "priority" => "high",
+                        "notification" => [
+                            "sound" => "notification_alert.mp3",
+                        ],
+                    ],
+                ])
             ];
 
-            $fcm = $this->messaging()->send($message);
+            $jsonData = json_encode($postData);
 
-            $notification = Notification::query()->create([
-                'user_id' => $userId,
-                'title' => $title,
-                'body' => $body,
-                'image_url' => $data['image_url'] ?? null,
+            // Initialize cURL
+            $curl = curl_init();
+
+            curl_setopt_array($curl, [
+                CURLOPT_URL => $url,
+                CURLOPT_POST => true,
+                CURLOPT_HTTPHEADER => [
+                    "Content-Type: application/json",
+                    "Authorization: Bearer {$token}",
+                ],
+                CURLOPT_POSTFIELDS => $jsonData,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_HEADER => true,       // Capture headers
             ]);
 
-            //log fcm
-            Log::info("FCM sent to token: " . $token . " Message ID: " . $notification->id);
-            return true;
+            $response = curl_exec($curl);
 
-        } catch (Throwable $e) {
-            Log::error("FCM Token Error: " . $e->getMessage());
-            return false;
+            // cURL error handling
+            if ($response === false) {
+                return [
+                    "success" => false,
+                    "curl_error" => curl_error($curl),
+                ];
+            }
+
+            // Extract HTTP Status Code
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+
+            // Separate headers and body
+            $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+            $header = substr($response, 0, $headerSize);
+            $body = substr($response, $headerSize);
+
+            curl_close($curl);
+
+            // Try to decode JSON body
+            $decoded = json_decode($body, true);
+
+            // Log for debugging
+            logger("Firebase HTTP Code: " . $httpCode);
+            logger("Firebase Response Raw: " . $body);
+
+            // Return structured response
+            return [
+                "success" => $httpCode >= 200 && $httpCode < 300,
+                "http_code" => $httpCode,
+                "headers" => $this->parseHeaders($header),
+                "raw_response" => $body,
+                "json_response" => $decoded,
+            ];
+
+        } catch (\Exception $e) {
+            logger("Firebase Notification Error: " . $e->getMessage());
+            return [
+                "success" => false,
+                "exception" => $e->getMessage(),
+            ];
         }
+    }
+
+    private function getFireBaseAccessToken()
+    {
+        $filePath = public_path(env('GOOGLE_CREDENTIALS_PATH'));
+        $scope = env('FIREBASE_SCOPE_MESSAGE_URL');
+
+        $client = new GoogleClient();
+        $client->setAuthConfig($filePath);
+        $client->addScope($scope);
+
+        $response = $client->fetchAccessTokenWithAssertion();
+        return $response['access_token'] ?? false;
     }
 
     /**
-     * Send to Topic
+     * Parse response headers into an associative array
      */
-    public function sendToTopic(string $topic, string $title, string $body, array $data = []): bool
+    private function parseHeaders($headerString)
     {
-        try {
-            $message = [
-                'topic' => $topic,
-                'notification' => [
-                    'title' => $title,
-                    'body' => $body,
-                ],
-                'data' => $data,
-            ];
+        $headers = [];
+        $lines = explode("\n", $headerString);
 
-            $this->messaging()->send($message);
-
-            Notification::query()->create([
-                'user_id' => null,
-                'title' => $title,
-                'body' => $body,
-                'image_url' => $data['image_url'] ?? null,
-            ]);
-            return true;
-
-        } catch (Throwable $e) {
-            Log::error("FCM Topic Error: " . $e->getMessage());
-            return false;
+        foreach ($lines as $line) {
+            if (strpos($line, ':') !== false) {
+                [$key, $value] = explode(': ', $line, 2);
+                $headers[$key] = trim($value);
+            }
         }
+
+        return $headers;
     }
 
-    /**
-     * Send Data Only (Silent push)
-     */
-    public function sendDataMessage(string $token, array $data): bool
+    private function stringifyData(array $data): array
     {
-        try {
-            $message = [
-                'token' => $token,
-                'data' => $data,
-            ];
+        $stringified = [];
 
-            $this->messaging()->send($message);
-            return true;
-
-        } catch (Throwable $e) {
-            Log::error("FCM Data Error: " . $e->getMessage());
-            return false;
+        foreach ($data as $key => $value) {
+            // Convert everything to string
+            if (is_array($value)) {
+                // Convert nested arrays to JSON string
+                $stringified[$key] = json_encode($value);
+            } else {
+                $stringified[$key] = (string) $value;
+            }
         }
+
+        return $stringified;
     }
+
 }
