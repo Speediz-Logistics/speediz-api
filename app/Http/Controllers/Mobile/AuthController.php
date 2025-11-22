@@ -17,7 +17,6 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
-            'device_token' => 'nullable|string',
         ]);
 
         if (!Auth::attempt($credentials)) {
@@ -35,8 +34,8 @@ class AuthController extends Controller
             ]);
         }
 
-        if (isset($credentials['device_token'])) {
-            $user->device_token = $credentials['device_token'];
+        if (isset($request['device_token'])) {
+            $user->device_token = $request['device_token'];
             $user->save();
         }
 
