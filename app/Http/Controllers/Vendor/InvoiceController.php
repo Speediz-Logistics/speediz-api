@@ -319,6 +319,10 @@ class InvoiceController extends Controller
             'cancelled' => 0,
         ];
 
+        if (!$vendorInvoice->invoice || $vendorInvoice->invoice->isEmpty()) {
+            return $this->success($vendorInvoice, 'Vendor invoice details with no packages.');
+        }
+
         // Count package statuses
         foreach ($vendorInvoice->invoice as $invoice) {
             if ($invoice->package) {
