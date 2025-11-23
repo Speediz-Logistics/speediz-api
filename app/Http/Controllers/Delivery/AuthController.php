@@ -137,9 +137,26 @@ class AuthController extends Controller
         return response()->json($request->user());
     }
 
-    public function me()
+    public function me(Request $request)
     {
-        return auth()->guard('api')->user();
+        $user = $request->user();
+        if (!$user) {
+            return $this->failed(null, 'User', 'User not authenticated', 401);
+        }
+        $driver = Driver::where('user_id', $user->id)->first();
+
+        if (!$driver) {
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
+        }
+
+        return $this->success(
+            [
+                'user' => $user,
+                'driver' => $driver
+            ],
+            "Successfully fetched authenticated driver",
+            "Successfully fetched authenticated driver"
+        );
     }
 
 }
