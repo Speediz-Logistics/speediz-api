@@ -45,10 +45,12 @@ class InvoiceController extends Controller
             return $this->failed('Unauthorized', 401);
         }
 
+        $driver = Driver::query()->where('user_id', $user->id)->first();
+
         // Fetch only the driver's own invoice
         $invoice = Invoice::query()
             ->where('id', $id)
-            ->where('driver_id', $user->id)
+            ->where('driver_id', $driver->id)
             ->first();
 
         if (!$invoice) {
