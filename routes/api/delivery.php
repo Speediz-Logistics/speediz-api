@@ -3,6 +3,7 @@
 use App\Http\Controllers\Delivery\AuthController;
 use App\Http\Controllers\Delivery\DeliveryHomeController;
 use App\Http\Controllers\Delivery\ExpressController;
+use App\Http\Controllers\Delivery\InvoiceController;
 use App\Http\Controllers\Delivery\MapController;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,12 @@ Route::prefix('delivery')->group(function () {
             Route::post('/delivered', [DeliveryHomeController::class, 'deliveredPackage'])->name('delivery.delivered-package');
             Route::post('/rollback', [DeliveryHomeController::class, 'rollbackCompletedPackage'])->name('delivery.rollback-delivered-package');
             Route::post('/cancel', [DeliveryHomeController::class, 'cancelDelivery'])->name('delivery.cancel-delivery');
+        });
+
+        //invoce
+        Route::prefix('invoice')->group(function () {
+            Route::get('/', [InvoiceController::class, 'invoices'])->name('delivery.invoices');
+            Route::get('/{id}', [InvoiceController::class, 'showInvoice'])->name('delivery.show-invoice');
         });
 
         //realtime tracking post
