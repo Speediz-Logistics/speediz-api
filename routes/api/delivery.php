@@ -42,9 +42,9 @@ Route::prefix('delivery')->group(function () {
             Route::post('/cancel', [DeliveryHomeController::class, 'cancelDelivery'])->name('delivery.cancel-delivery');
         });
 
-        //invoce
+        //invoice
         Route::prefix('invoice')->group(function () {
-            Route::get('/', [InvoiceController::class, 'invoices'])->name('delivery.invoices');
+            Route::get('/', [InvoiceController::class, 'index'])->name('delivery.invoices');
             Route::get('/{id}', [InvoiceController::class, 'showInvoice'])->name('delivery.show-invoice');
         });
 
