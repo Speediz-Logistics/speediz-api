@@ -26,9 +26,26 @@ class AuthController extends Controller
         ]);
     }
 
-    public function me()
+    public function me(Request $request)
     {
-        return auth()->guard('api')->user();
+        $user = $request->user();
+        if (!$user) {
+            return $this->failed(null, 'User', 'User not authenticated', 401);
+        }
+        $vendor = Vendor::where('user_id', $user->id)->first();
+
+        if (!$vendor) {
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
+        }
+
+        return $this->success(
+            [
+                'user' => $user,
+                'driver' => $vendor
+            ],
+            "Successfully fetched authenticated vendor",
+            "Successfully fetched authenticated vendor",
+        );
     }
 
     public function delete($id)
