@@ -72,6 +72,7 @@ class DriverManagementController extends Controller
             $data = [
                 'shipment_id' => $shipment->id,
                 'package_id' => $package->id,
+                'navigate_to' => 'notifications',
             ];
 
             $this->sendFirebaseNotification(

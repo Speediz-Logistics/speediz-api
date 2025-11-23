@@ -48,5 +48,11 @@ Route::prefix('delivery')->group(function () {
         Route::prefix('map')->group(function () {
             Route::get('/{package_number}', [MapController::class, 'searchMap'])->name('delivery.map-search');
         });
+
+        //Notifications
+        Route::prefix('notifications')->group(function () {
+            Route::get('/', [DeliveryHomeController::class, 'notifications'])->name('delivery.notifications');
+            Route::post('/read', [DeliveryHomeController::class, 'readNotifications'])->name('delivery.read-notifications');
+        });
     });
 });

@@ -318,4 +318,43 @@ class DeliveryHomeController extends Controller
 
         return $this->success($tracking, 'Realtime tracking updated successfully');
     }
+
+    //notifications
+    public function notifications(Request $request)
+    {
+        $user = auth()->user();
+        $driver = Driver::where('user_id', $user->id)->first();
+
+        if (!$driver) {
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
+        }
+
+        $notifications = $user->notifications()->orderBy('created_at', 'desc')->get();
+
+        return $this->success($notifications, 'Notifications retrieved successfully');
+    }
+
+    //readNotifications
+    public function readNotifications(Request $request)
+    {
+        $user = auth()->user();
+        $driver = Driver::where('user_id', $user->id)->first();
+
+        if (!$driver) {
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
+        }
+
+        $notificationIds = $request->input('notification_ids', []);
+
+        if (empty($notificationIds)) {
+            return $this->failed(null, 'No notification IDs provided', 400);
+        }
+
+        // Mark specified notifications as read
+        $user->unreadNotifications()
+            ->whereIn('id', $notificationIds)
+            ->update(['read_at' => now()]);
+
+        return $this->success(null, 'Notifications marked as read successfully');
+    }
 }
