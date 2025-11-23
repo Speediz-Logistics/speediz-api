@@ -88,7 +88,7 @@ class InvoiceController extends Controller
         // Get package status counts for this invoice
         $statusCounts = Package::query()
             ->selectRaw('status, count(*) as count')
-            ->where('driver_id', $driver->id)
+            ->where('invoice_id', $invoice->id)
             ->groupBy('status')
             ->get()
             ->pluck('count', 'status')
