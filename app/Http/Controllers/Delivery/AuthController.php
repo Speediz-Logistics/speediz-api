@@ -159,4 +159,84 @@ class AuthController extends Controller
         );
     }
 
+    //updateProfile
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        if (!$user) {
+            return $this->failed(null, 'User', 'User not authenticated', 401);
+        }
+
+        $driver = Driver::where('user_id', $user->id)->first();
+        if (!$driver) {
+            return $this->failed(null, 'Driver', 'Driver not found', 404);
+        }
+
+        // --------------------------
+        // 1. VALIDATION
+        // --------------------------
+        $validated = $request->validate([
+            'first_name'         => 'sometimes|string|max:255',
+            'last_name'          => 'sometimes|string|max:255',
+            'driver_type'        => 'sometimes|string|max:255',
+            'driver_description' => 'sometimes|string|max:500',
+            'dob'                => 'sometimes',
+            'gender'             => 'sometimes',
+            'zone'               => 'sometimes|string|max:255',
+            'contact_number'     => 'sometimes|string|max:20',
+
+            'image'              => 'sometimes',
+            'telegram_contact'   => 'sometimes|string|max:255',
+            'cv'                 => 'sometimes',
+            'address'            => 'sometimes|string|max:255',
+        ]);
+
+        // --------------------------
+        // 2. UPDATE USER TABLE
+        // --------------------------
+        $user->update([
+            'first_name'     => $validated['first_name'] ?? $user->first_name,
+            'last_name'      => $validated['last_name'] ?? $user->last_name,
+            'phone'          => $validated['contact_number'] ?? $user->phone,
+            'telegram'       => $validated['telegram_contact'] ?? $user->telegram,
+            'address'        => $validated['address'] ?? $user->address,
+        ]);
+
+        // --------------------------
+        // 3. HANDLE FILE UPLOADS
+        // --------------------------
+
+        // Upload profile image
+        if ($request->hasFile('image')) {
+            $imagePath = $this->upload($request, 'driver_image');
+            $driver->image = $imagePath;
+        }
+
+        // Upload CV
+        if ($request->hasFile('cv')) {
+            $cvPath = $this->upload($request, 'cv');
+            $driver->cv = $cvPath;
+        }
+
+        // --------------------------
+        // 4. UPDATE DRIVER TABLE
+        // --------------------------
+        $driver->update([
+            'driver_type'        => $validated['driver_type'] ?? $driver->driver_type,
+            'driver_description' => $validated['driver_description'] ?? $driver->driver_description,
+            'dob'                => $validated['dob'] ?? $driver->dob,
+            'gender'             => $validated['gender'] ?? $driver->gender,
+            'zone'               => $validated['zone'] ?? $driver->zone,
+        ]);
+
+        $driver->save();
+
+        return $this->success([
+            'user' => $user,
+            'driver' => $driver
+        ], 'Profile updated successfully');
+    }
+
+
 }

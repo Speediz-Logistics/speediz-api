@@ -22,6 +22,8 @@ Route::prefix('delivery')->group(function () {
 
     // ---------------------------------Protected routes---------------------------------
     Route::middleware(['auth:api', 'delivery.access'])->group(function () {
+        //update profile
+        Route::post('/update-profile', [AuthController::class, 'updateProfile'])->name('delivery.update-profile');
 
         Route::get('/me', [AuthController::class, 'me'])->name('delivery.me');
         Route::post('/logout', [AuthController::class, 'logout'])->name('delivery.logout');
