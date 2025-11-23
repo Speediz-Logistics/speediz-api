@@ -28,7 +28,6 @@ class InvoiceController extends Controller
         $perPage = $request->get('per_page', 10);
 
         $invoices = Invoice::query()
-            ->select('id', 'driver_id', 'amount', 'status', 'created_at') // optimize select
             ->where('driver_id', $driver->id)
             ->orderByDesc('created_at')
             ->paginate($perPage);
