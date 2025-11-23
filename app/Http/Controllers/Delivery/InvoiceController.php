@@ -74,7 +74,10 @@ class InvoiceController extends Controller
         ];
 
         // Ensure packages is a collection
-        $packages = $invoice->packages ?? collect();
+        $packages = Package::query()
+            ->where('invoice_id', $invoice->id)
+            ->where('driver_id', $driver->id)
+            ->get();
 
         // Add computed fields
         $invoice->total_package_price = $packages->sum('price');
