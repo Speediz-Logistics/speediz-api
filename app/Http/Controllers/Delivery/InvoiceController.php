@@ -55,7 +55,7 @@ class InvoiceController extends Controller
 
         // Fetch single invoice with packages
         $invoice = Invoice::query()
-            ->with(['packages.shipment']) // eager load for better performance
+            ->with(['packages.shipment', 'driver', 'vendor']) // eager load for better performance
             ->where('id', $id)
             ->where('driver_id', $driver->id)
             ->first();
