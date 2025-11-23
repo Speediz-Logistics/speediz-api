@@ -49,43 +49,54 @@ class InvoiceController extends Controller
 
         $driver = Driver::query()->where('user_id', $user->id)->first();
 
-        // Fetch only the driver's own invoice
-        $invoices = Invoice::query()
+        if (!$driver) {
+            return $this->failed('Driver not found', 404);
+        }
+
+        // Fetch single invoice with packages
+        $invoice = Invoice::query()
+            ->with(['packages.shipment']) // eager load for better performance
             ->where('id', $id)
             ->where('driver_id', $driver->id)
             ->first();
 
-        if (!$invoices) {
+        if (!$invoice) {
             return $this->failed('Invoice not found', 404);
         }
 
-        $allStatuses = [ConstPackageStatus::CANCELLED, ConstPackageStatus::PENDING,  ConstPackageStatus::IN_TRANSIT, ConstPackageStatus::COMPLETED];
+        // All possible statuses
+        $allStatuses = [
+            ConstPackageStatus::CANCELLED,
+            ConstPackageStatus::PENDING,
+            ConstPackageStatus::IN_TRANSIT,
+            ConstPackageStatus::COMPLETED
+        ];
 
-        // Convert paginator collection and modify invoices
-        $invoices->getCollection()->transform(function ($invoice) use ($allStatuses) {
-            // Ensure packages is a collection
-            $packages = $invoice->packages ?? collect();
+        // Ensure packages is a collection
+        $packages = $invoice->packages ?? collect();
 
-            $invoice->total_package_price = $packages->sum('price');
-            $invoice->delivery_fee = $packages->sum(fn($package) => optional($package->shipment)->delivery_fee ?? 0);
+        // Add computed fields
+        $invoice->total_package_price = $packages->sum('price');
+        $invoice->delivery_fee = $packages->sum(
+            fn ($package) => optional($package->shipment)->delivery_fee ?? 0
+        );
 
-            // Get the package status counts
-            $statusCounts = Package::query()
-                ->selectRaw('status, count(*) as count')
-                ->where('driver_id', $invoice->driver_id)
-                ->groupBy('status')
-                ->get()
-                ->pluck('count', 'status')
-                ->toArray();
+        // Get package status counts for this invoice
+        $statusCounts = Package::query()
+            ->selectRaw('status, count(*) as count')
+            ->where('invoice_id', $invoice->id)
+            ->groupBy('status')
+            ->get()
+            ->pluck('count', 'status')
+            ->toArray();
 
-            // Ensure all statuses exist with default 0
-            $invoice->package_status_counts = collect($allStatuses)
-                ->mapWithKeys(fn($status) => [$status => $statusCounts[$status] ?? 0]);
+        // Ensure all statuses appear
+        $invoice->package_status_counts = collect($allStatuses)
+            ->mapWithKeys(fn ($status) => [
+                $status => $statusCounts[$status] ?? 0
+            ]);
 
-            return $invoice;
-        });
-
-        return $this->success($invoices, 'Invoice retrieved successfully');
+        return $this->success($invoice, 'Invoice retrieved successfully');
     }
 
 }
