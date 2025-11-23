@@ -81,7 +81,13 @@ class AuthController extends Controller
     //me
     public function me(Request $request)
     {
-        return $this->success($request->user(), 'Employee Profile');
+        if (!$request->user()->hasRole(ConstUserRole::EMPLOYEE)) {
+            return $this->error(null, 'Unauthorized', 401);
+        }
+
+        $employee = Employee::where('user_id', $request->user()->id)->first();
+
+        return $this->success($employee, 'Employee Profile');
     }
 
     //logout
