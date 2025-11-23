@@ -100,7 +100,7 @@ class InvoiceController extends Controller
                 $status => $statusCounts[$status] ?? 0
             ]);
 
-        return $this->success($packages, 'Invoice retrieved successfully');
+        return $this->success(InvoiceResource::make($invoice), 'Invoice retrieved successfully');
     }
 
 }
