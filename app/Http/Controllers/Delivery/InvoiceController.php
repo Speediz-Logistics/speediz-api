@@ -75,7 +75,6 @@ class InvoiceController extends Controller
 
         // Ensure packages is a collection
         $packages = Package::query()
-            ->where('invoice_id', $invoice->id)
             ->where('driver_id', $driver->id)
             ->get();
 
