@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Delivery;
 
 use App\Constants\ConstPackageStatus;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Delivery\InvoiceResource;
 use App\Models\Driver;
 use App\Models\Invoice;
 use App\Models\Package;
@@ -96,7 +97,7 @@ class InvoiceController extends Controller
                 $status => $statusCounts[$status] ?? 0
             ]);
 
-        return $this->success($invoice, 'Invoice retrieved successfully');
+        return $this->success(InvoiceResource::make($invoice), 'Invoice retrieved successfully');
     }
 
 }
