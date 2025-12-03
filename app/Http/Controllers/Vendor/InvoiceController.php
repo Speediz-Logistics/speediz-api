@@ -156,22 +156,26 @@ class InvoiceController extends Controller
     }
 
     //vendorInvoice
-    public function vendorInvoice()
+    public function vendorInvoice(Request $request)
     {
         $user = auth()->user();
+
         if (!$user || !$user->vendor) {
             return $this->failed('Unauthorized access.', 403);
         }
 
         $perPage = request()->query('per_page', config('pagination.per_page', 10));
-        $dateFilter = $this->parseDateFilter(request()->query('date'));
+        $dateFilter = $this->parseDateFilter($request->query('date'));
+        $invoice_number = $request->query('invoice_number');
+
         if ($dateFilter instanceof \Illuminate\Http\JsonResponse) {
-            return $dateFilter; // return error if invalid
+            return $dateFilter; // invalid date response
         }
 
         $vendorId = $user->vendor->id;
 
         $vendorInvoices = VendorInvoice::query()
+            ->when($invoice_number, fn($query, $number) => $query->where('invoice_number', 'like', "%$number%"))
             ->where('vendor_id', $vendorId)
             ->whereHas('invoices.package', function ($query) {
                 $query->whereNotIn('status', ['completed', 'cancelled']);
@@ -179,13 +183,22 @@ class InvoiceController extends Controller
             ->when($dateFilter, fn($query, $date) => $query->whereDate('created_at', $date))
             ->paginate($perPage);
 
-        $packageSummary = $this->calculatePackageSummary($vendorInvoices);
+        // Transform to return ONLY required fields
+        $minimalInvoices = $vendorInvoices->getCollection()->map(function ($invoice) {
+            return [
+                'invoice_number' => $invoice->invoice_number,
+                'status' => ucfirst($invoice->status),
+            ];
+        });
+
+        // Replace paginated data with minimal format
+        $vendorInvoices->setCollection($minimalInvoices);
 
         return $this->success([
             'vendor_invoices' => $vendorInvoices,
-            'package_summary' => $packageSummary,
         ], 'List of current vendor invoices.');
     }
+
 
     /**
      * Show history (completed or cancelled invoices)
