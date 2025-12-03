@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Vendor;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Vendor\InvoiceCollection;
 use App\Http\Resources\Vendor\InvoiceResource;
+use App\Models\DeliveryFee;
 use App\Models\Package;
 use App\Models\VendorInvoice;
 use App\Traits\BaseApiResponse;
@@ -320,7 +321,7 @@ class InvoiceController extends Controller
         $totalDeliveryFee = 0;
 
         $packagesList = [];
-
+        $deliveryFee = DeliveryFee::first();
         /* ------------------------
            LOOP THROUGH INVOICES
         ------------------------- */
@@ -335,7 +336,7 @@ class InvoiceController extends Controller
             // Count totals
             $totalPackages++;
             $totalPrice += $package->price ?? 0;
-            $totalDeliveryFee += $package->delivery_fee ?? 0;
+            $totalDeliveryFee += $deliveryFee->fee ?? 0;
 
             // Count status
             switch ($package->status) {
