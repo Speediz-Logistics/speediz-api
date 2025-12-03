@@ -296,7 +296,6 @@ class InvoiceController extends Controller
         $vendorInvoice = VendorInvoice::where('vendor_id', $vendorId)
             ->with([
                 'vendor',
-                'invoices',
                 'invoices.customer',
                 'invoices.driver',
                 'invoices.package',
