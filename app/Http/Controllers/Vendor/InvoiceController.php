@@ -313,6 +313,7 @@ class InvoiceController extends Controller
         $pending = 0;
         $completed = 0;
         $cancelled = 0;
+        $in_transit = 0;
 
         $totalPackages = 0;
         $totalPrice = 0;
@@ -341,6 +342,7 @@ class InvoiceController extends Controller
                 case 'pending': $pending++; break;
                 case 'completed': $completed++; break;
                 case 'cancelled': $cancelled++; break;
+                case 'in_transit': $in_transit++; break;
             }
         }
 
@@ -360,6 +362,7 @@ class InvoiceController extends Controller
                 "pending" => $pending,
                 "completed" => $completed,
                 "cancelled" => $cancelled,
+                "in_transit" => $in_transit,
             ],
 
             "packages_summary_total" => [
