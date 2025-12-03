@@ -319,13 +319,20 @@ class InvoiceController extends Controller
             'cancelled' => 0,
         ];
 
-        if (!$vendorInvoice->invoice || $vendorInvoice->invoice->isEmpty()) {
+        // NEW: collect all packages into a separate array
+        $packages = [];
+
+        if (!$vendorInvoice->invoices || $vendorInvoice->invoices->isEmpty()) {
+            $vendorInvoice->package_summary = $packageCounts;
+            $vendorInvoice->packages = [];
             return $this->success($vendorInvoice, 'Vendor invoice details with no packages.');
         }
 
-        // Count package statuses
-        foreach ($vendorInvoice->invoice as $invoice) {
+        // Go through invoices and collect packages
+        foreach ($vendorInvoice->invoices as $invoice) {
             if ($invoice->package) {
+                $packages[] = $invoice->package; // extract package ONLY
+
                 $packageCounts['total']++;
 
                 switch ($invoice->package->status) {
@@ -347,6 +354,11 @@ class InvoiceController extends Controller
 
         // Add counts to the response
         $vendorInvoice->package_summary = $packageCounts;
+        $vendorInvoice->packages = $packages;
+
+        $vendorInvoice->invoices->each(function ($invoice) {
+            unset($invoice->package);
+        });
 
         return $this->success($vendorInvoice, 'Vendor invoice details.');
     }

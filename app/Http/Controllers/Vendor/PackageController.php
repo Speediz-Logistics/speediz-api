@@ -170,7 +170,6 @@ class PackageController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'number' => 'required|string',
             'name' => 'required|string|max:255',
             'slug' => 'required|string',
             'price' => 'required|numeric|min:0',
@@ -191,9 +190,16 @@ class PackageController extends Controller
             'status' => 'nullable|string',
         ]);
 
-        if (Package::where('number', $validatedData['number'])->exists()) {
-            return $this->failed($validatedData['number'], 'Package Number Already Exists', 'The package number already exists.', 400);
+        // Generate a unique package number
+        $latestPackage = Package::orderBy('created_at', 'desc')->first();
+        //$latestPackage->number is string like PKG-0001
+        if ($latestPackage) {
+            $lastNumber = (int) str_replace('PKG-', '', $latestPackage->number);
+            $newNumber = $lastNumber + 1;
+        } else {
+            $newNumber = 1;
         }
+        $validatedData['number'] = 'PKG-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 
         // Check if the image is uploaded
         $image = null;
