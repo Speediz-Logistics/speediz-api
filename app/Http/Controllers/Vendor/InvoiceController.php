@@ -296,69 +296,89 @@ class InvoiceController extends Controller
         $vendorInvoice = VendorInvoice::where('vendor_id', $vendorId)
             ->with([
                 'vendor',
-                'invoices.customer',
-                'invoices.driver',
-                'invoices.package',
+                'invoices',
+                'invoices.package'
             ])
-            ->when($dateFilter, function ($query, $date) {
-                return $query->whereDate('created_at', $date);
-            })
+            ->when($dateFilter, fn ($q, $d) => $q->whereDate('created_at', $d))
             ->find($id);
 
         if (!$vendorInvoice) {
             return $this->failed('Vendor invoice not found.', 404);
         }
 
-        // Initialize package count
-        $packageCounts = [
-            'total' => 0,
-            'completed' => 0,
-            'pending' => 0,
-            'in_transit' => 0,
-            'cancelled' => 0,
-        ];
+        /* ------------------------
+           VARIABLES
+        ------------------------- */
 
-        // NEW: collect all packages into a separate array
-        $packages = [];
+        $pending = 0;
+        $completed = 0;
+        $cancelled = 0;
 
-        if (!$vendorInvoice->invoices || $vendorInvoice->invoices->isEmpty()) {
-            $vendorInvoice->package_summary = $packageCounts;
-            $vendorInvoice->packages = [];
-            return $this->success($vendorInvoice, 'Vendor invoice details with no packages.');
-        }
+        $totalPackages = 0;
+        $totalPrice = 0;
+        $totalDeliveryFee = 0;
 
-        // Go through invoices and collect packages
+        $packagesList = [];
+
+        /* ------------------------
+           LOOP THROUGH INVOICES
+        ------------------------- */
+
         foreach ($vendorInvoice->invoices as $invoice) {
-            if ($invoice->package) {
-                $packages[] = $invoice->package; // extract package ONLY
+            $package = $invoice->package;
+            if (!$package) continue;
 
-                $packageCounts['total']++;
+            // Add to list
+            $packagesList[] = [
+                "package_id" => $package->id,
+                "tracking_number" => $package->tracking_number ?? null,
+                "price" => $package->price ?? 0,
+                "delivery_fee" => $package->delivery_fee ?? 0,
+                "status" => $package->status,
+            ];
 
-                switch ($invoice->package->status) {
-                    case 'completed':
-                        $packageCounts['completed']++;
-                        break;
-                    case 'pending':
-                        $packageCounts['pending']++;
-                        break;
-                    case 'in_transit':
-                        $packageCounts['in_transit']++;
-                        break;
-                    case 'cancelled':
-                        $packageCounts['cancelled']++;
-                        break;
-                }
+            // Count totals
+            $totalPackages++;
+            $totalPrice += $package->price ?? 0;
+            $totalDeliveryFee += $package->delivery_fee ?? 0;
+
+            // Count status
+            switch ($package->status) {
+                case 'pending': $pending++; break;
+                case 'completed': $completed++; break;
+                case 'cancelled': $cancelled++; break;
             }
         }
 
-        // Add counts to the response
-        $vendorInvoice->package_summary = $packageCounts;
-        $vendorInvoice->packages = $packages;
+        $totalRemain = $totalPrice - $totalDeliveryFee;
 
-        $vendorInvoice->invoices->each(function ($invoice) {
-            unset($invoice->package);
-        });
+        /* ------------------------
+            FINAL RESPONSE
+        ------------------------- */
 
-        return $this->success($vendorInvoice, 'Vendor invoice details.');
+        $response = [
+            "invoice_number" => $vendorInvoice->invoice_number ?? "N/A",
+            "vendor_name" => $vendorInvoice->vendor->name ?? "Unknown",
+            "date" => $vendorInvoice->created_at->format('d M Y'),
+            "status" => ucfirst($vendorInvoice->status),
+
+            "package_summary" => [
+                "pending" => $pending,
+                "completed" => $completed,
+                "cancelled" => $cancelled,
+            ],
+
+            "packages_summary_total" => [
+                "total_packages" => $totalPackages,
+                "total_package_price" => $totalPrice,
+                "total_delivery_fee" => $totalDeliveryFee,
+                "total_remain" => $totalRemain,
+            ],
+
+            "packages" => $packagesList
+        ];
+
+        return $this->success($response, "Vendor invoice details.");
     }
+
 }
