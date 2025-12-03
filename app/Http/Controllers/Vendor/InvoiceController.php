@@ -187,6 +187,7 @@ class InvoiceController extends Controller
         $minimalInvoices = $vendorInvoices->getCollection()->map(function ($invoice) {
             return [
                 'invoice_number' => $invoice->invoice_number,
+                'date' => $invoice->created_at->format('d M Y'),
                 'status' => ucfirst($invoice->status),
             ];
         });
