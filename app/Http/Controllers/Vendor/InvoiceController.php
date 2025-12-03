@@ -166,7 +166,7 @@ class InvoiceController extends Controller
 
         $perPage = request()->query('per_page', config('pagination.per_page', 10));
         $dateFilter = $this->parseDateFilter($request->query('date'));
-        $invoice_number = $request->query('invoice_number');
+        $invoice_number = $request->query('search');
 
         if ($dateFilter instanceof \Illuminate\Http\JsonResponse) {
             return $dateFilter; // invalid date response
