@@ -176,14 +176,6 @@ class InvoiceController extends Controller
             ->whereHas('invoices.package', function ($query) {
                 $query->whereNotIn('status', ['completed', 'cancelled']);
             })
-            ->with([
-                'vendor',
-                'invoices',
-                'invoices.customer',
-                'invoices.driver',
-                'invoices.package',
-                'invoices.vendor',
-            ])
             ->when($dateFilter, fn($query, $date) => $query->whereDate('created_at', $date))
             ->paginate($perPage);
 
