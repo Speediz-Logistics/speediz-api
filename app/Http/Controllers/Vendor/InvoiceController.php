@@ -355,7 +355,7 @@ class InvoiceController extends Controller
 
         $response = [
             "invoice_number" => $vendorInvoice->invoice_number ?? "N/A",
-            "vendor_name" => $vendorInvoice->vendor->name ?? "Unknown",
+            "vendor_name" => $vendorInvoice->vendor->first_name . ' ' . $vendorInvoice->vendor->last_name ?? "N/A",
             "date" => $vendorInvoice->created_at->format('d M Y'),
             "status" => ucfirst($vendorInvoice->status),
 
