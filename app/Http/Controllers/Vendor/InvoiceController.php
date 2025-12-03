@@ -329,13 +329,7 @@ class InvoiceController extends Controller
             if (!$package) continue;
 
             // Add to list
-            $packagesList[] = [
-                "package_id" => $package->id,
-                "tracking_number" => $package->tracking_number ?? null,
-                "price" => $package->price ?? 0,
-                "delivery_fee" => $package->delivery_fee ?? 0,
-                "status" => $package->status,
-            ];
+            $packagesList[] = $package;
 
             // Count totals
             $totalPackages++;
