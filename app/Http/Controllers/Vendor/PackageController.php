@@ -178,106 +178,100 @@ class PackageController extends Controller
             'zone' => 'nullable|string|max:255',
 
             'customer_first_name' => 'nullable|string|max:255',
-            'customer_last_name' => 'nullable|string|max:255',
-            'customer_phone' => 'nullable|string|max:15',
+            'customer_last_name'  => 'nullable|string|max:255',
+            'customer_phone'      => 'required|string|max:15',
 
             'customer_location' => 'nullable|string|max:255',
             'customer_lat' => 'nullable|numeric',
             'customer_lng' => 'nullable|numeric',
 
             'driver_id' => 'nullable',
-
             'status' => 'nullable|string',
         ]);
 
-        // Generate a unique package number
+        // Generate unique number
         $latestPackage = Package::orderBy('created_at', 'desc')->first();
-        //$latestPackage->number is string like PKG-0001
-        if ($latestPackage) {
-            $lastNumber = (int) str_replace('PKG-', '', $latestPackage->number);
-            $newNumber = $lastNumber + 1;
-        } else {
-            $newNumber = 1;
-        }
+        $lastNumber = $latestPackage ? (int) str_replace('PKG-', '', $latestPackage->number) : 0;
+        $newNumber = $lastNumber + 1;
+
         $validatedData['number'] = 'PKG-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 
-        //if name is null set name as random with package number
+        // Auto name if null
         if (empty($validatedData['name'])) {
             $validatedData['name'] = 'Package ' . $validatedData['number'];
         }
 
-        //if slug is null set slug as name with hyphen
+        // Auto slug if null
         if (empty($validatedData['slug'])) {
             $validatedData['slug'] = str_replace(' ', '-', strtolower($validatedData['name']));
         }
 
-        // Check if the image is uploaded
+        // Image upload
         $image = null;
         if ($request->hasFile('image')) {
             $image = $this->upload($request);
         }
 
-        // Check if customer exists or create a new one
-        $customer = null;
-        if (!empty($validatedData['customer_phone'])) {
-            $customer = Customer::firstOrCreate(
-                ['phone' => $validatedData['customer_phone']],
-                [
-                    'first_name' => $validatedData['customer_first_name'] ?? null,
-                    'last_name' => $validatedData['customer_last_name'] ?? null,
-                ]
-            );
-        }
+        // CUSTOMER LOGIC (phone is required)
+        $customer = Customer::firstOrCreate(
+            ['phone' => $validatedData['customer_phone']],
+            [
+                'first_name' => $validatedData['customer_first_name'] ?? null,
+                'last_name'  => $validatedData['customer_last_name'] ?? null,
+            ]
+        );
 
-        // Create location if provided
+        // Location
         $locationData = array_filter([
             'location' => $validatedData['customer_location'] ?? null,
             'lat' => $validatedData['customer_lat'] ?? null,
             'lng' => $validatedData['customer_lng'] ?? null,
         ]);
 
-        $location = !empty($locationData) ? Location::create($locationData) : null;
+        $location = !empty($locationData)
+            ? Location::create($locationData)
+            : null;
 
-        $user = auth()->user();
-        $vendor = Vendor::where('user_id', $user->id)->first();
+        $vendor = Vendor::where('user_id', auth()->id())->first();
         $deliveryFee = \App\Models\DeliveryFee::first();
 
-        // Create package
+        // Package create
         $package = Package::create([
-            'number' => $validatedData['number'],
-            'name' => $validatedData['name'],
-            'slug' => $validatedData['slug'],
-            'price' => $validatedData['price'],
+            'number'      => $validatedData['number'],
+            'name'        => $validatedData['name'],
+            'slug'        => $validatedData['slug'],
+            'price'       => $validatedData['price'],
             'description' => $validatedData['description'] ?? null,
-            'image' => $image ?? null,
-            'zone' => $validatedData['zone'] ?? null,
-            'vendor_id' => $vendor->id,
+            'image'       => $image ?? null,
+            'zone'        => $validatedData['zone'] ?? null,
+
+            'vendor_id'   => $vendor->id,
             'customer_id' => $customer->id,
-            'location_id' => $location->id,
-            'status' => $validatedData['status'] ?? ConstPackageStatus::PENDING,
+            'location_id' => $location->id ?? null,
+            'status'      => $validatedData['status'] ?? ConstPackageStatus::PENDING,
         ]);
 
-        //create vendor_invoice_id
+        // Vendor invoice
         $vendorInvoice = VendorInvoice::create([
-            'vendor_id' => $vendor->id,
+            'vendor_id'      => $vendor->id,
             'invoice_number' => 'VINV-' . $validatedData['number'],
-            'total' => $deliveryFee ? $deliveryFee->fee : 0,
-            'description' => 'Invoice for package ' . $validatedData['number'],
-            'status' => ConstInvoiceStatus::UNPAID,
+            'total'          => $deliveryFee?->fee ?? 0,
+            'description'    => 'Invoice for package ' . $validatedData['number'],
+            'status'         => ConstInvoiceStatus::UNPAID,
         ]);
 
-        //create invoice for the package
+        // Package invoice
         $package->invoice()->create([
             'vendor_invoice_id' => $vendorInvoice->id,
-            'customer_id' => $customer->id,
-            'vendor_id' => $vendor->id,
-            'package_id' => $package->id,
-            'driver_id' => $validatedData['driver_id'] ?? null,
-            'number' => 'INV-' . $package->number,
-            'date' => now(),
-            'total' => $deliveryFee ? $deliveryFee->fee : 0,
-            'status' => ConstInvoiceStatus::UNPAID,
-            'note' => 'Invoice for package ' . $package->number,
+            'customer_id'       => $customer->id,
+            'vendor_id'         => $vendor->id,
+            'package_id'        => $package->id,
+            'driver_id'         => $validatedData['driver_id'] ?? null,
+            'number'            => 'INV-' . $package->number,
+            'date'              => now(),
+            'total'             => $deliveryFee?->fee ?? 0,
+            'status'            => ConstInvoiceStatus::UNPAID,
+            'note'              => 'Invoice for package ' . $package->number,
         ]);
 
         //update package with invoice id
