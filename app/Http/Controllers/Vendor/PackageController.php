@@ -171,7 +171,7 @@ class PackageController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'nullable|string|max:255',
-            'slug' => 'required|string',
+            'slug' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'image' => 'nullable',
