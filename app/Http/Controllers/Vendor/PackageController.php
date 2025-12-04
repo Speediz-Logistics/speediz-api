@@ -201,6 +201,16 @@ class PackageController extends Controller
         }
         $validatedData['number'] = 'PKG-' . str_pad($newNumber, 4, '0', STR_PAD_LEFT);
 
+        //if name is null set name as random with package number
+        if (empty($validatedData['name'])) {
+            $validatedData['name'] = 'Package ' . $validatedData['number'];
+        }
+
+        //if slug is null set slug as name with hyphen
+        if (empty($validatedData['slug'])) {
+            $validatedData['slug'] = str_replace(' ', '-', strtolower($validatedData['name']));
+        }
+
         // Check if the image is uploaded
         $image = null;
         if ($request->hasFile('image')) {
