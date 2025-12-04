@@ -261,7 +261,7 @@ class PackageController extends Controller
         ]);
 
         // Package invoice
-        $package->invoice()->create([
+        $invoice = Invoice::create([
             'vendor_invoice_id' => $vendorInvoice->id,
             'customer_id'       => $customer->id,
             'vendor_id'         => $vendor->id,
@@ -275,7 +275,7 @@ class PackageController extends Controller
         ]);
 
         //update package with invoice id
-        $package->invoice_id = $package->invoice->id;
+        $package->invoice_id = $invoice->id;
         $package->save();
 
         return $this->success(
