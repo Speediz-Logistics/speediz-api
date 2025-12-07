@@ -179,6 +179,8 @@ class PackageController extends Controller
 
             'customer_first_name' => 'nullable|string|max:255',
             'customer_last_name'  => 'nullable|string|max:255',
+            //customer name is optional
+            'customer_name'       => 'nullable|string|max:255',
             'customer_phone'      => 'required|string|max:15',
 
             'customer_location' => 'nullable|string|max:255',
@@ -218,6 +220,7 @@ class PackageController extends Controller
             [
                 'first_name' => $validatedData['customer_first_name'] ?? null,
                 'last_name'  => $validatedData['customer_last_name'] ?? null,
+                'name'       => $validatedData['customer_name'] ?? null,
             ]
         );
 
