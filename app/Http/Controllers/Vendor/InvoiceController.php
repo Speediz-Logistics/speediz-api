@@ -186,6 +186,7 @@ class InvoiceController extends Controller
         // Transform to return ONLY required fields
         $minimalInvoices = $vendorInvoices->getCollection()->map(function ($invoice) {
             return [
+                'id' => $invoice->id,
                 'invoice_number' => $invoice->invoice_number,
                 'date' => $invoice->created_at->format('Y-m-d'),
                 'status' => ucfirst($invoice->status),
