@@ -339,6 +339,8 @@ class InvoiceController extends Controller
 
             // Add to list
             $packagesList[] = $package;
+            //add $deliveryFee to package
+            $package->delivery_fee = $deliveryFee->fee ?? 0;
 
             // Count totals
             $totalPackages++;
