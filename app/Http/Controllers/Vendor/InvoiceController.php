@@ -307,6 +307,9 @@ class InvoiceController extends Controller
                 'invoices',
                 'invoices.package'
             ])
+            ->whereHas('invoices.package', function ($query) {
+                $query->whereNotIn('status', ['completed', 'cancelled']);
+            })
             ->when($dateFilter, fn ($q, $d) => $q->whereDate('created_at', $d))
             ->find($id);
 
