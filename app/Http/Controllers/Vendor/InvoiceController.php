@@ -178,7 +178,7 @@ class InvoiceController extends Controller
             ->when($invoice_number, fn($query, $number) => $query->where('invoice_number', 'like', "%$number%"))
             ->where('vendor_id', $vendorId)
             ->whereHas('invoices.package', function ($query) {
-                $query->whereNotIn('status', ['completed', 'cancelled']);
+                $query->whereIn('status', ['completed', 'cancelled']);
             })
             ->when($dateFilter, fn($query, $date) => $query->whereDate('created_at', $date))
             ->paginate($perPage);
@@ -308,7 +308,7 @@ class InvoiceController extends Controller
                 'invoices.package'
             ])
             ->whereHas('invoices.package', function ($query) {
-                $query->whereNotIn('status', ['completed', 'cancelled']);
+                $query->whereIn('status', ['completed', 'cancelled']);
             })
             ->when($dateFilter, fn ($q, $d) => $q->whereDate('created_at', $d))
             ->find($id);
