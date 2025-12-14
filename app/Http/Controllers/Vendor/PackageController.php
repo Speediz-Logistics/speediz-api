@@ -215,14 +215,21 @@ class PackageController extends Controller
         }
 
         // CUSTOMER LOGIC (phone is required)
-        $customer = Customer::firstOrCreate(
-            ['phone' => $validatedData['customer_phone']],
-            [
-                'first_name' => $validatedData['customer_first_name'] ?? null,
-                'last_name'  => $validatedData['customer_last_name'] ?? null,
-                'name'       => $validatedData['customer_name'] ?? null,
-            ]
-        );
+//        $customer = Customer::firstOrCreate(
+//            ['phone' => $validatedData['customer_phone']],
+//            [
+//                'first_name' => $validatedData['customer_first_name'] ?? null,
+//                'last_name'  => $validatedData['customer_last_name'] ?? null,
+//                'name'       => $validatedData['customer_name'] ?? null,
+//            ]
+//        );
+
+        $customer = Customer::create([
+            'first_name' => $validatedData['customer_first_name'] ?? null,
+            'last_name'  => $validatedData['customer_last_name'] ?? null,
+            'name'       => $validatedData['customer_name'] ?? null,
+            'phone'      => $validatedData['customer_phone'] ?? null,
+        ]);
 
         // Location
         $locationData = array_filter([
