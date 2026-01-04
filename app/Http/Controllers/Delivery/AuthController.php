@@ -38,7 +38,7 @@ class AuthController extends Controller
             'bank_number' => 'nullable|string|max:255',
             'telegram_contact' => 'nullable|string|max:255',
 
-            'cv' => 'nullable',
+            'nid' => 'nullable',
         ]);
 
         // Create User
@@ -59,11 +59,11 @@ class AuthController extends Controller
             $validatedData['image'] = $image;
         }
 
-        $cvImage = null;
-        // Handle CV upload if provided
-        if (isset($validatedData['cv'])) {
-            $cvImage = $this->upload($request, 'cv');
-            $validatedData['cv'] = $cvImage;
+        $nidImage = null;
+        // Handle nid upload if provided
+        if (isset($validatedData['nid'])) {
+            $nidImage = $this->upload($request, 'nid');
+            $validatedData['nid'] = $nidImage;
         }
 
         // Create Driver
@@ -81,7 +81,7 @@ class AuthController extends Controller
             'bank_name' => $validatedData['bank_name'] ?? null,
             'bank_number' => $validatedData['bank_number'] ?? null,
             'user_id' => $user->id,
-            'cv' => $validatedData['cv'] ?? null,
+            'nid' => $validatedData['nid'] ?? null,
         ]);
 
         return $this->success(
@@ -198,7 +198,7 @@ class AuthController extends Controller
 
             'image'              => 'sometimes',
             'telegram_contact'   => 'sometimes|string|max:255',
-            'cv'                 => 'sometimes',
+            'nid'                 => 'sometimes',
             'address'            => 'sometimes|string|max:255',
         ]);
 
@@ -223,10 +223,10 @@ class AuthController extends Controller
             $driver->image = $imagePath;
         }
 
-        // Upload CV
-        if ($request->hasFile('cv')) {
-            $cvPath = $this->upload($request, 'cv');
-            $driver->cv = $cvPath;
+        // Upload nid
+        if ($request->hasFile('nid')) {
+            $nidPath = $this->upload($request, 'nid');
+            $driver->nid = $nidPath;
         }
 
         // --------------------------
@@ -246,6 +246,28 @@ class AuthController extends Controller
             'user' => $user,
             'driver' => $driver
         ], 'Profile updated successfully');
+    }
+
+    //resetPassword
+    public function resetPassword(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Check if current password matches
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return $this->failed(null, 'Password', 'Current password is incorrect', 400);
+        }
+
+        // Update password
+        $user->password = Hash::make($validated['new_password']);
+        $user->save();
+
+        return $this->success(null, 'Password updated successfully', 'Password updated successfully');
     }
 
 

@@ -31,7 +31,7 @@ class DeliveryResource extends JsonResource
             'bank_number' => $this->bank_number,
             'status' => $this->user->account_status,
             'email' => $this->user->email,
-            'cv' => $this->cv,
+            'nid' => $this->nid,
             'address' => $this->address,
             'created_at' => Carbon::parse($this->created_at)->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::parse($this->updated_at)->format('Y-m-d H:i:s'),

@@ -63,7 +63,7 @@ class DeliveryUserController extends Controller
             'image' => 'nullable',
             'bank_name' => 'nullable|string',
             'bank_number' => 'nullable|string',
-            'cv' => 'nullable',
+            'nid' => 'nullable',
             'address' => 'nullable|string',
 
             'email' => 'required|email|unique:users,email',
@@ -76,13 +76,13 @@ class DeliveryUserController extends Controller
             $image = $this->upload($request);
         }
 
-        //cv image
-        $cv = null;
-        if ($request->hasFile('cv')) {
-            $cvPath = $request->file('cv')->store('cv', 'public');
+        //nid image
+        $nid = null;
+        if ($request->hasFile('nid')) {
+            $nidPath = $request->file('nid')->store('nid', 'public');
 
             // Generate the correct file URL, ensuring it does not contain extra base URLs
-            $cv = Storage::url($cvPath);
+            $nid = Storage::url($nidPath);
         }
 
         $password = Hash::make($request->password);
@@ -109,7 +109,7 @@ class DeliveryUserController extends Controller
             'image' => $image ?? '',
             'bank_name' => $request->bank_name,
             'bank_number' => $request->bank_number,
-            'cv' => $cv ?? '',
+            'nid' => $nid ?? '',
             'address' => $request->address,
             'user_id' => $user->id,
         ]);
@@ -135,7 +135,7 @@ class DeliveryUserController extends Controller
             'image' => 'nullable',
             'bank_name' => 'nullable|string',
             'bank_number' => 'nullable|string',
-            'cv' => 'nullable',
+            'nid' => 'nullable',
             'address' => 'nullable|string',
 
             'password' => 'nullable|string|min:6',
@@ -153,14 +153,14 @@ class DeliveryUserController extends Controller
             $image = $this->updateImage($request, $driver);
         }
 
-        //cv image
-        $cv = $request->cv ?? null;
-        if ($request->hasFile('cv')) {
+        //nid image
+        $nid = $request->nid ?? null;
+        if ($request->hasFile('nid')) {
             // Save the file to the 'public' disk (which is typically the storage/app/public directory)
-            $cvPath = $request->file('cv')->store('cv', 'public');
+            $nidPath = $request->file('nid')->store('nid', 'public');
 
             // Generate the correct file URL, ensuring it does not contain extra base URLs
-            $cv = Storage::url($cvPath);
+            $nid = Storage::url($nidPath);
         }
 
         $password = Hash::make($request->password);
@@ -188,7 +188,7 @@ class DeliveryUserController extends Controller
             'image' => $image ?? '',
             'bank_name' => $request->bank_name,
             'bank_number' => $request->bank_number,
-            'cv' => $cv ?? '',
+            'nid' => $nid ?? '',
             'address' => $request->address,
         ]);
 

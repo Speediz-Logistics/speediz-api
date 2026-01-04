@@ -25,6 +25,9 @@ Route::prefix('delivery')->group(function () {
         //update profile
         Route::post('/update-profile', [AuthController::class, 'updateProfile'])->name('delivery.update-profile');
 
+        //reset password
+        Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('delivery.reset-password');
+
         Route::get('/me', [AuthController::class, 'me'])->name('delivery.me');
         Route::post('/logout', [AuthController::class, 'logout'])->name('delivery.logout');
 

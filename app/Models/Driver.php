@@ -26,7 +26,7 @@ class Driver extends Model
         'image',
         'bank_name',
         'bank_number',
-        'cv',
+        'nid',
         'address',
         'user_id',
     ];
@@ -47,8 +47,8 @@ class Driver extends Model
         'dob' => 'date',
     ];
 
-    //cv
-    public function getCvAttribute($value)
+    //nid
+    public function getnidAttribute($value)
     {
         return $value ? asset('' . $value) : null;
     }

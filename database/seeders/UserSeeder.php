@@ -115,7 +115,7 @@ class UserSeeder extends Seeder
             'image' => $image4,
             'bank_name' => 'ACLEDA',
             'bank_number' => '123987456',
-            'cv' => null,
+            'nid' => null,
             'address' => 'Phnom Penh',
             'user_id' => $driverUser->id,
         ]);
