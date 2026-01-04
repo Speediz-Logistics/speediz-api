@@ -37,6 +37,8 @@ class AuthController extends Controller
             'bank_name' => 'nullable|string|max:255',
             'bank_number' => 'nullable|string|max:255',
             'telegram_contact' => 'nullable|string|max:255',
+
+            'cv' => 'nullable',
         ]);
 
         // Create User
@@ -57,6 +59,13 @@ class AuthController extends Controller
             $validatedData['image'] = $image;
         }
 
+        $cvImage = null;
+        // Handle CV upload if provided
+        if (isset($validatedData['cv'])) {
+            $cvImage = $this->upload($request, 'cv');
+            $validatedData['cv'] = $cvImage;
+        }
+
         // Create Driver
         $driver = Driver::create([
             'first_name' => $validatedData['first_name'],
@@ -72,6 +81,7 @@ class AuthController extends Controller
             'bank_name' => $validatedData['bank_name'] ?? null,
             'bank_number' => $validatedData['bank_number'] ?? null,
             'user_id' => $user->id,
+            'cv' => $validatedData['cv'] ?? null,
         ]);
 
         return $this->success(
