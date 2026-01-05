@@ -271,6 +271,32 @@ class AuthController extends Controller
         return $this->success(null, 'Password updated successfully', 'Password updated successfully');
     }
 
+    //resetPasswordToken
+    public function resetPasswordToken(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'token' => 'required',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => bcrypt($password),
+                ])->save();
+            }
+        );
+
+        if ($status === Password::PASSWORD_RESET) {
+            return $this->success(null, __('passwords.reset'), __('passwords.reset'));
+        }
+
+        return $this->error(null, __('passwords.token'), 400);
+    }
+
+
     public function forgotPassword(Request $request)
     {
         $request->validate([

@@ -47,3 +47,8 @@ Route::get('/email/verify/{id}/{hash}', function ($id, $hash) {
 Route::prefix('v1')->group(function () {
     Route::get('email/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('delivery.verification.verify');
 });
+
+
+Route::get('/reset-password/{token}', function ($token) {
+    return view('auth.reset-password', ['token' => $token, 'email' => request('email')]);
+})->name('password.reset');

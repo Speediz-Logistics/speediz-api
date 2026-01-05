@@ -3,31 +3,18 @@
         <x-slot name="logo">
         </x-slot>
 
-        <form method="POST" action="{{ route('password.update') }}">
+        <form method="POST" action="{{ url('/api/delivery/reset-password') }}">
             @csrf
 
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+            <input type="hidden" name="token" value="{{ $token }}">
+            <input type="hidden" name="email" value="{{ $email }}">
 
-            <div class="block">
-                <label  for="email">{{ __('Email') }}</label>
-                <label  id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus autocomplete="username"></label>
-            </div>
+            <input type="password" name="password" placeholder="New Password" required>
+            <br><br>
+            <input type="password" name="password_confirmation" placeholder="Confirm Password" required>
+            <br><br>
 
-            <div class="mt-4">
-                <label for="password">{{ __('Password') }}</label>
-                <input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <label for="password_confirmation">{{ __('Confirm Password') }}</label>
-                <input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <button>
-                    {{ __('Reset Password') }}
-                </button>
-            </div>
+            <button type="submit">Reset Password</button>
         </form>
     </div>
 </x-guest-layout>
