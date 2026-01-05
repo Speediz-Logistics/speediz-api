@@ -272,8 +272,6 @@ class AuthController extends Controller
     }
 
     //resetPasswordToken
-    use Illuminate\Support\Facades\Password;
-
     public function resetPasswordToken(Request $request)
     {
         $request->validate([
