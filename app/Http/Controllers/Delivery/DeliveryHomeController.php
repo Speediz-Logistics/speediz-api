@@ -80,8 +80,8 @@ class DeliveryHomeController extends Controller
             return $this->failed(null, 'Package', 'Package not found', 404);
         }
 
-        DB::beginTransaction();
-        try {
+//        DB::beginTransaction();
+//        try {
 
             // Update Shipment
             $shipment = Shipment::where('package_id', $request->id)
@@ -116,14 +116,14 @@ class DeliveryHomeController extends Controller
                 'picked_up_at' => now()
             ]);
 
-            DB::commit();
+//            DB::commit();
 
             return $this->success($package, 'Package picked up successfully');
 
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return $this->failed(null,'Failed to update: ' . $e->getMessage(), 500);
-        }
+//        } catch (\Exception $e) {
+//            DB::rollBack();
+//            return $this->failed(null,'Failed to update: ' . $e->getMessage(), 500);
+//        }
     }
 
     //deliveredPackage
