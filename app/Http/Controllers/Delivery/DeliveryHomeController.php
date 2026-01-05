@@ -84,16 +84,21 @@ class DeliveryHomeController extends Controller
         try {
 
             // Update Shipment
-            $shipment = Shipment::where('package_id', $request->id)
+            Shipment::where('package_id', $request->id)
                 ->update(['status' => ConstShipmentStatus::IN_TRANSIT]);
+
+            $shipment = Shipment::where('package_id', $request->id)->first();
 
             //if shipment not found
             if (!$shipment) {
                 return $this->failed(null, 'Shipment not found for this package', 404);
             }
             // Update Invoice (assign driver)
-            $invoice = Invoice::where('package_id', $request->id)
+            Invoice::where('package_id', $request->id)
                 ->update(['driver_id' => $driver->id]);
+
+            //get invoice id
+            $invoice = Invoice::where('package_id', $request->id)->first();
 
             if (!$invoice) {
                 return $this->failed(null, 'Invoice not found for this package', 404);
