@@ -19,7 +19,7 @@ Route::prefix('delivery')->group(function () {
         Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('delivery.forgot-password');
         //email verification
 
-        Route::post('/reset-password', [AuthController::class, 'resetPasswordToken'])->name('delivery.public.reset-password');
+        Route::post('/reset-password-token', [AuthController::class, 'resetPasswordToken'])->name('delivery.public.reset-password');
 
         Route::get('email/verify/{id}', [AuthController::class, 'verify'])->name('delivery.verification.verify');
     });

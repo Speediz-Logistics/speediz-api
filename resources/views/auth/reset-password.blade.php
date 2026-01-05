@@ -88,7 +88,7 @@
     <h2>Reset Your Password</h2>
     <p>Create a strong new password to secure your account.</p>
 
-    <form method="POST" action="{{ url('/api/delivery/reset-password') }}">
+    <form method="POST" action="{{ url('/api/delivery/reset-password-token') }}">
         @csrf
 
         <input type="hidden" name="token" value="{{ $token }}">
