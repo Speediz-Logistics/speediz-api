@@ -107,6 +107,11 @@ class DeliveryHomeController extends Controller
                 'lng' => $request->lng ?? null,
             ]);
 
+            logger('Delivery Tracking Created: ', ['delivery_tracking_id' => $deliveryTracking->id]);
+            logger('Package Pickup by Driver: ', ['driver_id' => $driver->id, 'package_id' => $package->id]);
+            logger('Shipment Updated: ', ['shipment_id' => $shipment->id ?? null, 'status' => ConstShipmentStatus::IN_TRANSIT]);
+            logger('Invoice Updated: ', ['invoice_id' => $invoice->id ?? null, 'driver_id' => $driver->id]);
+
             // Update Package
             $package->update([
                 'status' => ConstPackageStatus::IN_TRANSIT,
