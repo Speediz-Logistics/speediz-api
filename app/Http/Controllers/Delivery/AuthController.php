@@ -272,6 +272,8 @@ class AuthController extends Controller
     }
 
     //resetPasswordToken
+    use Illuminate\Support\Facades\Password;
+
     public function resetPasswordToken(Request $request)
     {
         $request->validate([
@@ -290,10 +292,12 @@ class AuthController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return $this->success(null, __('passwords.reset'), __('passwords.reset'));
+            return view('auth.reset-success');
         }
 
-        return $this->error(null, __('passwords.token'), 400);
+        return view('auth.reset-failed', [
+            'message' => __('passwords.token')
+        ]);
     }
 
 
