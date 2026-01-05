@@ -15,6 +15,9 @@ Route::prefix('delivery')->group(function () {
     Route::prefix('')->group(function () {
         Route::post('/register', [AuthController::class, 'register'])->name('delivery.register');
         Route::post('/login', [AuthController::class, 'login'])->name('delivery.login');
+        //forgot password
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('delivery.forgot-password');
+        //email verification
 
         Route::get('email/verify/{id}', [AuthController::class, 'verify'])->name('delivery.verification.verify');
     });

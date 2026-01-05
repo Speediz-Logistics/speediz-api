@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -269,6 +270,32 @@ class AuthController extends Controller
 
         return $this->success(null, 'Password updated successfully', 'Password updated successfully');
     }
+
+    public function forgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        if ($status === Password::RESET_LINK_SENT) {
+            return $this->success(
+                null,
+                __('passwords.sent'),
+                __('passwords.sent')
+            );
+        }
+
+        return $this->error(
+            null,
+            __('passwords.user'),
+            404
+        );
+    }
+
 
 
 }
