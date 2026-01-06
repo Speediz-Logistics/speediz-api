@@ -52,6 +52,15 @@ return [
 
     'channels' => [
 
+        'debug' => [
+            'driver' => 'monolog',
+            'handler' => StreamHandler::class,
+            'with' => [
+                'stream' => storage_path('logs/debug.log'),
+            ],
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
+
         //fcm
         'fcm' => [
             'driver' => 'monolog',

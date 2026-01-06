@@ -18,6 +18,7 @@ use App\Traits\BaseApiResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DeliveryHomeController extends Controller
 {
@@ -67,6 +68,14 @@ class DeliveryHomeController extends Controller
     {
         $user = auth()->user();
         $driver = Driver::where('user_id', $user->id)->first();
+
+        Log::channel('debug')->info('Pickup Package Request', [
+            'user_id' => $user->id,
+            'driver_id' => $driver->id ?? null,
+            'package_id' => $request->id,
+            'lat' => $request->lat ?? null,
+            'lng' => $request->lng ?? null,
+        ]);
 
         if (!$driver) {
             return $this->failed(null, 'Driver', 'Driver not found', 404);
@@ -142,6 +151,12 @@ class DeliveryHomeController extends Controller
         $user = auth()->user();
         $driver = Driver::where('user_id', $user->id)->first();
 
+        Log::channel('debug')->info('Delivered Package Request', [
+            'user_id' => $user->id,
+            'driver_id' => $driver->id ?? null,
+            'package_id' => $request->id,
+        ]);
+
         if (!$driver) {
             return $this->failed(null, 'Driver', 'Driver not found', 404);
         }
@@ -214,6 +229,13 @@ class DeliveryHomeController extends Controller
         $user = auth()->user();
         $driver = Driver::where('user_id', $user->id)->first();
 
+        Log::channel('debug')->info('Rollback Delivered Package Request', [
+            'user_id' => $user->id,
+            'driver_id' => $driver->id ?? null,
+            'package_id' => $request->id,
+            'reason' => $request->reason ?? null,
+        ]);
+
         if (!$driver) {
             return $this->failed(null, 'Driver', 'Driver not found', 404);
         }
@@ -268,6 +290,13 @@ class DeliveryHomeController extends Controller
     {
         $user = auth()->user();
         $driver = Driver::where('user_id', $user->id)->first();
+
+        Log::channel('debug')->info('Cancel Delivery Request', [
+            'user_id' => $user->id,
+            'driver_id' => $driver->id ?? null,
+            'package_id' => $request->id,
+            'reason' => $request->reason ?? null,
+        ]);
 
         if (!$driver) {
             return $this->failed(null, 'Driver', 'Driver not found', 404);
