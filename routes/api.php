@@ -6,6 +6,7 @@ use App\Http\Controllers\CompoundController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\ExportController;
+use App\Http\Controllers\FirebaseController;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\IncomeController;
 use App\Http\Controllers\ProductController;
@@ -27,6 +28,10 @@ use App\Http\Controllers\SupplierController;
 foreach (glob(__DIR__ . '/api/*.php') as $filename) {
     require_once $filename;
 }
+
+Route::post('send-notification', [FirebaseController::class, 'sendTestNotification'])->name('firebase.sendNotification');
+
+Route::post('send-to-device', [FirebaseController::class, 'sendToDevice'])->name('firebase.sendToDevice');
 
 //Route::post('/register', [UserAuthController::class, 'register'])->name('register');
 //Route::post('/login', [UserAuthController::class, 'login'])->name('login');
