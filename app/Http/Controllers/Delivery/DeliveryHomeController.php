@@ -259,12 +259,15 @@ class DeliveryHomeController extends Controller
                 'delivered_at' => null
             ]);
 
+            //find package id
+            $package = Package::where('number', $package_id)->first();
+
             // Update shipment
-            Shipment::where('package_id', $package_id)
+            Shipment::where('package_id', $package->id)
                 ->update(['status' => ConstShipmentStatus::PENDING]);
 
             // Update delivery tracking
-            DeliveryTracking::where('package_id', $package_id)
+            DeliveryTracking::where('package_id', $package->id)
                 ->update(['status' => ConstPackageStatus::PENDING]);
 
             //create rollback log
@@ -321,12 +324,15 @@ class DeliveryHomeController extends Controller
                 'status' => ConstPackageStatus::CANCELLED,
             ]);
 
+            //find package id
+            $package = Package::where('number', $package_id)->first();
+
             // Update shipment
-            Shipment::where('package_id', $package_id)
+            Shipment::where('package_id', $package->id)
                 ->update(['status' => ConstShipmentStatus::CANCELLED]);
 
             // Update delivery tracking
-            DeliveryTracking::where('package_id', $package_id)
+            DeliveryTracking::where('package_id', $package->id)
                 ->update(['status' => ConstPackageStatus::CANCELLED]);
 
             //rollback log
