@@ -43,7 +43,7 @@ class ExpressController extends Controller
                 'rollbacks',
             ])
             ->where('driver_id', $driver->id)
-            ->orderBy('created_at', 'desc') // Order by updated_at first
+            ->orderBy('created_at') // Order by updated_at first
             ->get()
             ->groupBy(function ($item) {
                 return $item->created_at->format('M d, Y'); // Group by date of updated_at
