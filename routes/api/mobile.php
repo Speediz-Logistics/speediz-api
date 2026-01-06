@@ -10,5 +10,8 @@ Route::prefix('mobile')->group(function () {
         Route::post('/login', [AuthController::class, 'login'])->name('vendor.login');
     });
 
+    Route::post('send-notification', [FirebaseController::class, 'sendTestNotification'])->name('firebase.sendNotification');
+
+    Route::post('send-to-device', [FirebaseController::class, 'sendToDevice'])->name('firebase.sendToDevice');
 
 });
