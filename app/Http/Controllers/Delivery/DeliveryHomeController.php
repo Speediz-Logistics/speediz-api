@@ -178,12 +178,15 @@ class DeliveryHomeController extends Controller
                 'delivered_at' => now()
             ]);
 
+            //find package id
+            $package = Package::where('number', $package_id)->first();
+
             // Update shipment
-            $shipment = Shipment::where('package_id', $package_id)
+            Shipment::where('package_id', $package->id)
                 ->update(['status' => ConstShipmentStatus::COMPLETED]);
 
             // Update delivery tracking
-            $deliveryTracking = DeliveryTracking::where('package_id', $package_id)->first();
+            $deliveryTracking = DeliveryTracking::where('package_id', $package->id)->first();
 
             if ($deliveryTracking) {
                 $deliveryTracking->update([
@@ -195,7 +198,7 @@ class DeliveryHomeController extends Controller
 
 
             // Get delivery fee
-            $shipment = Shipment::where('package_id', $package_id)->first();
+            $shipment = Shipment::where('package_id', $package->id)->first();
             $delivery_fee = $shipment->delivery_fee ?? 1.5;
 
             // Create revenue
@@ -205,7 +208,7 @@ class DeliveryHomeController extends Controller
                 'shipment_id' => $shipment->id ?? null,
                 'delivery_tracking_id' => $deliveryTracking->id ?? null,
                 'name' => 'Delivery Fee ' . now()->format('Y-m-d'),
-                'description' => "{$driver->name} Delivery Fee for Package ID {$package_id}",
+                'description' => "{$driver->name} Delivery Fee for Package ID {$package->id}",
                 'amount' => $delivery_fee,
             ]);
 
