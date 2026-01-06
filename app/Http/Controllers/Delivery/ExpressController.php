@@ -46,7 +46,7 @@ class ExpressController extends Controller
             ->orderBy('created_at', 'desc') // Order by updated_at first
             ->get()
             ->groupBy(function ($item) {
-                return $item->updated_at->format('M d, Y'); // Group by date of updated_at
+                return $item->created_at->format('M d, Y'); // Group by date of updated_at
             });
 
         // Paginate the grouped results manually
